@@ -1,0 +1,12 @@
+﻿@model TicketBox.Application.Features.CQRS.Categories.Commands.CreateCategoryCommand
+
+@{
+    Layout = null;
+}
+
+<form method="post">
+    <label> Kategori Adı</label>
+    <input type= "text" asp-for="CategoryName" class="form-control"/>
+    <br />
+    <button class="btn btn-primary">Kaydet</button>
+</form>

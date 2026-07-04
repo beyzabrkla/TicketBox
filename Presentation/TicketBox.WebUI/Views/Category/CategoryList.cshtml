@@ -1,0 +1,23 @@
+﻿@model List<TicketBox.Application.Features.CQRS.Categories.Results.GetCategoryQueryResult>
+@{
+    Layout = null;
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Kategori Adı</th>
+        <th>Sil</th>
+        <th>Güncelle</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.CategoryId</td>
+            <td>@item.CategoryName</td>
+            <td><a href="/Category/DeleteCategory/@item.CategoryId" class="btn btn-danger">Sil</a></td>
+            <td><a href="/Category/UpdateCategory/@item.CategoryId" class="btn btn-warning">Güncelle</a></td>
+        </tr>
+    }
+    <a href="/Category/CreateCategory" class="btn btn-info"> Yeni Kategori Ekle</a>
+</table>

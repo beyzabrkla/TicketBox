@@ -1,4 +1,15 @@
+using TicketBox.Application.Features.CQRS.Categories.Handlers;
+using TicketBox.Persistance.Context;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<GetCategoryQueryHandler>();
+builder.Services.AddScoped<GetByIdCategoryQueryHandler>();
+builder.Services.AddScoped<CreateCategoryCommandHandler>();
+builder.Services.AddScoped<UpdateCategoryCommandHandler>();
+builder.Services.AddScoped<RemoveCategoryCommandHandler>();
+
+builder.Services.AddDbContext<TicketContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
