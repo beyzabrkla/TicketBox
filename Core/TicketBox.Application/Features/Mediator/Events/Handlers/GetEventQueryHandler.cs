@@ -12,7 +12,7 @@ using TicketBox.Persistance.Context;
 namespace TicketBox.Application.Features.Mediator.Events.Handlers
 {
     public class GetEventQueryHandler : IRequestHandler<GetEventQuery, List<GetEventQueryResult>> //IRequestHandler arayüzünü uygular ve GetEventQuery isteğini işlemek için kullanılır. Bu sınıf, GetEventQuery isteğini alır ve bir liste döndürür.
-    {
+    {                                                  //controllerda istek gönderildiğinde, bu handler çağrılır, veritabanından etkinlikleri alır ve ikinci parametre olarak sonuçları döndürür.     
         private readonly TicketContext _ticketContext;
 
         public GetEventQueryHandler(TicketContext ticketContext)

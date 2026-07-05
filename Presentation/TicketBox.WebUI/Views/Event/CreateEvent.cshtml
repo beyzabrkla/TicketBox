@@ -1,0 +1,33 @@
+﻿@model TicketBox.Application.Features.Mediator.Events.Commands.CreateEventCommand
+
+@{
+    Layout = null;
+}
+
+<form method="post">
+    <label for="Title">Etkinlik Adı</label>
+    <input type="text" class="form-control" asp-for="Title">
+  
+    <label for="Description">Açıklama</label>
+    <input type="text" class="form-control" asp-for="Description">
+    
+    <label for="Location">Konum</label>
+    <input type="text" class="form-control" asp-for="Location">
+    
+    <label for="EventDate">Tarih</label>
+    <input type="date" class="form-control" asp-for="EventDate">
+    
+    <label for="Capacity">Kapasite</label>
+    <input type="number" class="form-control" asp-for="Capacity">
+    
+    <label for="Price">Fiyat</label>
+    <input type="number" class="form-control" asp-for="Price" step="0.01">
+    
+    <label for="ImageUrl">Görsel Url</label>
+    <input type="text" class="form-control" asp-for="ImageUrl">
+    
+    <label for="Category">Kategori</label>
+    <input type="text" class="form-control" asp-for="CategoryId">
+    
+    <button class="btn btn-primary">Oluştur</button>
+</form>

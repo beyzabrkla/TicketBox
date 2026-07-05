@@ -1,4 +1,5 @@
 using TicketBox.Application.Features.CQRS.Categories.Handlers;
+using TicketBox.Application.Features.Mediator.Events.Queries;
 using TicketBox.Persistance.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,10 @@ builder.Services.AddScoped<RemoveCategoryCommandHandler>();
 
 builder.Services.AddDbContext<TicketContext>();
 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(GetEventQuery).Assembly);
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
