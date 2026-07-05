@@ -1,9 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketBox.Domain.Entities;
 
 namespace TicketBox.Application.Features.Mediator.Tickets.Commands
@@ -15,10 +10,15 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Commands
         public int EventId { get; set; }
         public Event Event { get; set; }
 
-        public int AttendeeId { get; set; }
-        public Attendee Attendee { get; set; }
+        public int BookingId { get; set; }
+        public Booking Booking { get; set; }
+
+        public string AppUserId { get; set; }
 
         public DateTime PurchaseDate { get; set; }
         public decimal Price { get; set; }
+        public string PNR { get; set; }
+        public string TicketCode { get; set; }
+
     }
 }

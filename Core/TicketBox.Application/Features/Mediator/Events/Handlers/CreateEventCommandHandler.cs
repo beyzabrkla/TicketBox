@@ -26,6 +26,7 @@ namespace TicketBox.Application.Features.Mediator.Events.Handlers
                 Capacity = request.Capacity,
                 Price = request.Price,
                 ImageUrl = request.ImageUrl,
+                IsActive = request.IsActive,
                 CategoryId = request.CategoryId
             };
             await _ticketContext.Events.AddAsync(values);

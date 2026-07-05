@@ -16,8 +16,9 @@ namespace TicketBox.Domain.Entities
         public int Capacity { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
-
+        public bool IsActive { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public List<Ticket> Tickets { get; set; }
     }
 }

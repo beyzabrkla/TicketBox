@@ -1,10 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketBox.Application.Features.Mediator.Events.Queries;
 using TicketBox.Application.Features.Mediator.Events.Results;
 using TicketBox.Persistance.Context;
@@ -32,6 +27,7 @@ namespace TicketBox.Application.Features.Mediator.Events.Handlers
                 Capacity = x.Capacity,
                 Price = x.Price,
                 ImageUrl = x.ImageUrl,
+                IsActive = x.IsActive,
                 CategoryId = x.CategoryId
             }).ToListAsync(cancellationToken);
             

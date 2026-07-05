@@ -21,8 +21,11 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Handlers
                 .Select(t => new GetTicketQueryResult
                 {
                     TicketId = t.TicketId,
-                    EventId = t.EventId,
-                    AttendeeId = t.AttendeeId,
+                    Event = t.Event,
+                    Booking = t.Booking,
+                    AppUserId = t.AppUserId,
+                    PNR = t.PNR,
+                    TicketCode = t.TicketCode,
                     PurchaseDate = t.PurchaseDate,
                     Price = t.Price
                 })

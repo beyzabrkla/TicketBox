@@ -1,9 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketBox.Application.Features.Mediator.Events.Commands;
 using TicketBox.Persistance.Context;
 
@@ -33,6 +28,7 @@ namespace TicketBox.Application.Features.Mediator.Events.Handlers
             values.Capacity = request.Capacity;
             values.Price = request.Price;
             values.ImageUrl = request.ImageUrl;
+            values.IsActive = request.IsActive;
             values.CategoryId = request.CategoryId;
 
             await _ticketContext.SaveChangesAsync();

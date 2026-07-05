@@ -10,5 +10,6 @@ namespace TicketBox.Domain.Entities
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public List<Event> Events { get; set; }
     }
 }

@@ -6,13 +6,17 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Results
     {
         public int TicketId { get; set; }
 
+        public int BookingId { get; set; }
+        public Booking Booking { get; set; }
+
+        public string AppUserId { get; set; }
+
         public int EventId { get; set; }
         public Event Event { get; set; }
 
-        public int AttendeeId { get; set; }
-        public Attendee Attendee { get; set; }
-
         public DateTime PurchaseDate { get; set; }
+        public string PNR { get; set; }
+        public string TicketCode { get; set; }
         public decimal Price { get; set; }
     }
 }

@@ -1,9 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketBox.Application.Features.Mediator.Tickets.Commands;
 using TicketBox.Domain.Entities;
 using TicketBox.Persistance.Context;
@@ -24,9 +19,12 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Handlers
             var tickets = new Ticket
             {
                 EventId = request.EventId,
-                AttendeeId = request.AttendeeId,
+                BookingId = request.BookingId,
+                AppUserId = request.AppUserId,
                 PurchaseDate = request.PurchaseDate,
-                Price = request.Price
+                Price = request.Price,
+                PNR = request.PNR,
+                TicketCode = request.TicketCode
             };
             await _ticketContext.Tickets.AddAsync(tickets);
             await _ticketContext.SaveChangesAsync();

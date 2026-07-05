@@ -22,7 +22,10 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Handlers
                 {
                     TicketId = x.TicketId,
                     EventId = x.EventId,
-                    AttendeeId = x.AttendeeId,
+                    Booking = x.Booking,
+                    AppUserId = x.AppUserId,
+                    PNR = x.PNR,
+                    TicketCode = x.TicketCode,
                     PurchaseDate = x.PurchaseDate,
                     Price = x.Price
                 }).FirstOrDefaultAsync(cancellationToken);
