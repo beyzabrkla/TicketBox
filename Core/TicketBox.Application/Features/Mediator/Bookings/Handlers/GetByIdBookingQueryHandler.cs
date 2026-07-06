@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Mediator.Bookings.Queries;
 using TicketBox.Application.Features.Mediator.Bookings.Results;
-using TicketBox.Persistance.Context;
 
 namespace TicketBox.Application.Features.Mediator.Bookings.Handlers
 {

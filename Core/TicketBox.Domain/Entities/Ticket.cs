@@ -14,5 +14,7 @@
 
         public string AppUserId { get; set; }
         public DateTime PurchaseDate { get; set; }
+        public bool IsActive { get; set; } //Bilet iptal edildi mi?
+        public bool IsUsed { get; set; } //Bilet etkinliğe girişte kullanıldı mı?
     }
 }

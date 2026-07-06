@@ -14,8 +14,6 @@ namespace TicketBox.Application.Features.Mediator.Tickets.Commands
         public Event Event { get; set; }
         
         public DateTime PurchaseDate { get; set; }
-        public string PNR { get; set; }
-        public string TicketCode { get; set; }
         public decimal Price { get; set; }
     }
 }

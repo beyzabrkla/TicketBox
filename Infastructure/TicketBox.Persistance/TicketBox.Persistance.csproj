@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\TicketBox.Application\TicketBox.Application.csproj" />
     <ProjectReference Include="..\..\Core\TicketBox.Domain\TicketBox.Domain.csproj" />
   </ItemGroup>
 
