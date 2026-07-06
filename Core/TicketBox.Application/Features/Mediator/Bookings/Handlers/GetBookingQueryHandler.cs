@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Mediator.Bookings.Queries;
 using TicketBox.Application.Features.Mediator.Bookings.Results;
@@ -9,28 +10,18 @@ namespace TicketBox.Application.Features.Mediator.Bookings.Handlers
     public class GetBookingQueryHandler : IRequestHandler<GetBookingQuery, List<GetBookingQueryResult>>
     {
         private readonly TicketContext _ticketContext;
+        private readonly IMapper _mapper;
 
-        public GetBookingQueryHandler(TicketContext ticketContext)
+        public GetBookingQueryHandler(TicketContext ticketContext, IMapper mapper)
         {
             _ticketContext = ticketContext;
+            _mapper = mapper;
         }
 
         public async Task<List<GetBookingQueryResult>> Handle(GetBookingQuery request, CancellationToken cancellationToken)
         {
-            var values = await _ticketContext.Bookings
-                .Select(b => new GetBookingQueryResult
-                {
-                    BookingId = b.BookingId,
-                    AppUserId = b.AppUserId,
-                    BookingDate = b.BookingDate,
-                    TotalAmount = b.TotalAmount,
-                    EventId = b.EventId,
-                    Event = b.Event,
-                    Tickets = b.Tickets.ToList()
-                })
-                .ToListAsync(cancellationToken);
-            
-            return values;
+            var values = await _ticketContext.Bookings.ToListAsync(cancellationToken);
+            return _mapper.Map<List<GetBookingQueryResult>>(values);
         }
     }
 }

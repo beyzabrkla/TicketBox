@@ -4,6 +4,8 @@ using TicketBox.Persistance.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
+
 builder.Services.AddScoped<GetCategoryQueryHandler>();
 builder.Services.AddScoped<GetByIdCategoryQueryHandler>();
 builder.Services.AddScoped<CreateCategoryCommandHandler>();
