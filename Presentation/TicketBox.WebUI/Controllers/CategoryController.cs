@@ -25,11 +25,11 @@ namespace TicketBox.WebUI.Controllers
             _getByIdCategoryQueryHandler = getByIdCategoryQueryHandler;
         }
 
-        public async Task<IActionResult> CategoryList()
-        {
-            var values = await _getCategoryQueryHandler.Handle();
-            return View(values);
-        }
+        //public async Task<IActionResult> CategoryList()
+        //{
+        //    var values = await _getCategoryQueryHandler.Handle();
+        //    return View(values);
+        //}
 
         [HttpGet]
         public IActionResult CreateCategory()
@@ -37,11 +37,11 @@ namespace TicketBox.WebUI.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCategory(CreateCategoryCommand createCategoryCommand)
-        {
-            await _createCategoryCommandHandler.Handle(createCategoryCommand);
-            return RedirectToAction("CategoryList");
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateCategory(CreateCategoryCommand createCategoryCommand)
+        //{
+        //    await _createCategoryCommandHandler.Handle(createCategoryCommand);
+        //    return RedirectToAction("CategoryList");
+        //}
     }
 }

@@ -12,10 +12,10 @@ namespace TicketBox.Persistance.Repositories
         private readonly TicketContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(TicketContext context, DbSet<T> dbSet)
+        public GenericRepository(TicketContext context)
         {
             _context = context;
-            _dbSet = dbSet;
+            _dbSet = _context.Set<T>();
         }
 
         public async Task AddAsync(T entity)

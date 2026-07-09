@@ -1,9 +1,7 @@
 using FluentValidation;
 using MediatR;
 using TicketBox.Application;
-using TicketBox.Application.Features.Categories.Handlers;
 using TicketBox.Application.Features.Common.Behaviours;
-using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Domain.Interfaces;
 using TicketBox.Persistance.Context;
 using TicketBox.Persistance.Repositories;
@@ -15,8 +13,14 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
 
-        //AutoMapper ve Validation kaydı
-        builder.Services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
+        //AutoMapper kaydı
+        //Hem Web hem Application katmanındaki profilleri bulması için
+        builder.Services.AddAutoMapper(
+            typeof(ApplicationAssemblyReference).Assembly, // Application'ı tara
+            typeof(Program).Assembly // Kendi projenin içini de tara
+        );
+
+        // FluentValidation: ApplicationAssemblyReference sınıfının olduğu DLL'i tara
         builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
         builder.Services.AddHttpContextAccessor();
 
@@ -24,11 +28,11 @@ internal class Program
         //Repository ve DbContext kaydı
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddDbContext<TicketContext>();
-
-        //MediatR
+        
+        // MediatR: GetEventQuery'nin olduğu (Application) katmanı tara
         builder.Services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(typeof(GetEventQuery).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
         });
 
         //Pipeline (Validation) için kritik kayıt !!!

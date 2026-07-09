@@ -1,49 +1,196 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="scroll-smooth" lang="tr">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TicketBox.WebUI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TicketBox.WebUI.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TicketBox.WebUI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TicketBox | Bir Sonraki Deneyimini Bul</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <style>
+        body {
+        font-family: 'Inter', sans-serif;
+        }
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - TicketBox.WebUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        }
+
+        .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 240px;
+        gap: 24px;
+        }
+        @@media (max-width: 1024px) {
+        .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        }
+        }
+        @@media (max-width: 640px) {
+        .bento-grid {
+        grid-template-columns: 1fr;
+        }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #c7c4d8;
+        border-radius: 10px;
+        }
+
+        .section-fade-bottom {
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+
+        .section-fade-top {
+        mask-image: linear-gradient(to top, black 80%, transparent 100%);
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+        darkMode: "class",
+        theme: {
+        extend: {
+        "colors": {
+        "surface": "#f8f9ff",
+        "surface-dim": "#cbdbf5",
+        "on-error-container": "#93000a",
+        "on-secondary-fixed": "#3f001c",
+        "on-secondary": "#ffffff",
+        "surface-container-highest": "#d3e4fe",
+        "on-tertiary-fixed-variant": "#004e5c",
+        "on-primary-container": "#dad7ff",
+        "secondary": "#b5005d",
+        "surface-tint": "#4d44e3",
+        "inverse-on-surface": "#eaf1ff",
+        "error": "#ba1a1a",
+        "inverse-surface": "#213145",
+        "secondary-container": "#da2676",
+        "on-error": "#ffffff",
+        "on-primary-fixed": "#0f0069",
+        "surface-bright": "#f8f9ff",
+        "outline-variant": "#c7c4d8",
+        "primary-container": "#4f46e5",
+        "surface-container-lowest": "#ffffff",
+        "surface-container": "#e5eeff",
+        "primary-fixed": "#e2dfff",
+        "on-surface": "#0b1c30",
+        "primary-fixed-dim": "#c3c0ff",
+        "surface-container-low": "#eff4ff",
+        "tertiary-fixed": "#acedff",
+        "on-tertiary-fixed": "#001f26",
+        "primary": "#3525cd",
+        "surface-container-high": "#dce9ff",
+        "outline": "#777587",
+        "error-container": "#ffdad6",
+        "tertiary-container": "#006a7c",
+        "on-surface-variant": "#464555",
+        "tertiary": "#00505f",
+        "inverse-primary": "#c3c0ff",
+        "secondary-fixed": "#ffd9e2",
+        "tertiary-fixed-dim": "#4cd7f6",
+        "on-primary": "#ffffff",
+        "on-tertiary-container": "#93e8ff",
+        "on-secondary-fixed-variant": "#8e0048",
+        "surface-variant": "#d3e4fe",
+        "on-secondary-container": "#fffbff",
+        "on-primary-fixed-variant": "#3323cc",
+        "background": "#f8f9ff",
+        "on-tertiary": "#ffffff",
+        "secondary-fixed-dim": "#ffb1c7",
+        "on-background": "#0b1c30"
+        },
+        "borderRadius": {
+        "DEFAULT": "0.5rem",
+        "lg": "0.75rem",
+        "xl": "1rem",
+        "full": "9999px"
+        },
+        "spacing": {
+        "md": "16px",
+        "lg": "24px",
+        "sm": "8px",
+        "margin-mobile": "16px",
+        "container-max": "1280px",
+        "xl": "32px",
+        "xs": "4px",
+        "gutter": "24px",
+        "base": "4px"
+        },
+        "fontFamily": {
+        "display-lg": ["Inter"],
+        "headline-md": ["Inter"],
+        "body-md": ["Inter"],
+        "display-sm": ["Inter"],
+        "body-lg": ["Inter"],
+        "label-md": ["Inter"],
+        "headline-lg-mobile": ["Inter"],
+        "label-sm": ["Inter"],
+        "headline-lg": ["Inter"]
+        },
+        "fontSize": {
+        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+        "display-sm": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+        "headline-lg": ["30px", {"lineHeight": "38px", "fontWeight": "700"}]
+        }
+        },
+        },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+
+    @await Component.InvokeAsync("TopNavBar")
+
+    <main>
+        @RenderBody()
+    </main>
+
+    @await Component.InvokeAsync("Footer")
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        }
+        });
+        });
+
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput?.closest('.glass-card');
+        if (searchInput && searchContainer) {
+        searchInput.addEventListener('focus', () => {
+        searchContainer.classList.add('ring-2', 'ring-primary/50', 'border-white/50');
+        });
+        searchInput.addEventListener('blur', () => {
+        searchContainer.classList.remove('ring-2', 'ring-primary/50', 'border-white/50');
+        });
+        }
+    </script>
 </body>
 </html>

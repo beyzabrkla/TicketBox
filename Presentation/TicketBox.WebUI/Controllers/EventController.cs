@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TicketBox.Application.Features.Events.Commands;
-using TicketBox.Application.Features.Mediator.Events.Queries;
+using TicketBox.Application.Features.Events.Queries;
 
 namespace TicketBox.WebUI.Controllers
 {
