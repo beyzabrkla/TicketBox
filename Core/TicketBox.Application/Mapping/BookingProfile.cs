@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using TicketBox.Application.Features.Mediator.Bookings.Results;
+using TicketBox.Application.Features.Bookings.Results;
 using TicketBox.Domain.Entities;
 
 namespace TicketBox.Application.Mapping

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using TicketBox.Application.Features.CQRS.Categories.Results;
+using TicketBox.Application.Features.Categories.Results;
 using TicketBox.Domain.Entities;
 
 namespace TicketBox.Application.Mapping

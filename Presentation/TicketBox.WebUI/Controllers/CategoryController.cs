@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TicketBox.Application.Features.CQRS.Categories.Commands;
-using TicketBox.Application.Features.CQRS.Categories.Handlers;
+using TicketBox.Application.Features.Categories.Commands;
+using TicketBox.Application.Features.Categories.Handlers;
 
 namespace TicketBox.WebUI.Controllers
 {

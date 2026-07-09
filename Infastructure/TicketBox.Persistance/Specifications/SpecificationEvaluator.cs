@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TicketBox.Application.Features.Common.Specifications;
+using TicketBox.Domain.Specifications;
 
 namespace TicketBox.Persistance.Specifications
 {

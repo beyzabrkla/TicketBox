@@ -1,48 +1,64 @@
 using FluentValidation;
-using TicketBox.Application.Features.CQRS.Categories.Handlers;
-using TicketBox.Application.Features.Mediator.Events.Queries;
+using MediatR;
+using TicketBox.Application;
+using TicketBox.Application.Features.Categories.Handlers;
+using TicketBox.Application.Features.Common.Behaviours;
+using TicketBox.Application.Features.Events.Queries;
+using TicketBox.Domain.Interfaces;
 using TicketBox.Persistance.Context;
+using TicketBox.Persistance.Repositories;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddScoped<GetCategoryQueryHandler>();
-builder.Services.AddScoped<GetByIdCategoryQueryHandler>();
-builder.Services.AddScoped<CreateCategoryCommandHandler>();
-builder.Services.AddScoped<UpdateCategoryCommandHandler>();
-builder.Services.AddScoped<RemoveCategoryCommandHandler>();
-
-builder.Services.AddDbContext<TicketContext>();
-
-builder.Services.AddMediatR(cfg =>
+internal class Program
 {
-    cfg.RegisterServicesFromAssembly(typeof(GetEventQuery).Assembly);
-});
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+        //AutoMapper ve Validation kaydı
+        builder.Services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
+        builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
+        builder.Services.AddHttpContextAccessor();
+
+
+        //Repository ve DbContext kaydı
+        builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        builder.Services.AddDbContext<TicketContext>();
+
+        //MediatR
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(GetEventQuery).Assembly);
+        });
+
+        //Pipeline (Validation) için kritik kayıt !!!
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
