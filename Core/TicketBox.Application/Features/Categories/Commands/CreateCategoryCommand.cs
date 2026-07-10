@@ -2,7 +2,7 @@
 
 namespace TicketBox.Application.Features.Categories.Commands
 {
-    public class CreateCategoryCommand :IRequest
+    public class CreateCategoryCommand :IRequest<Unit>
     {
         public string CategoryName { get; set; }
     }

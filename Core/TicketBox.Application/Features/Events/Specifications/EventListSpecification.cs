@@ -3,12 +3,10 @@ using TicketBox.Domain.Specifications;
 
 namespace TicketBox.Application.Features.Events.Specifications
 {
-    public class UpcomingEventsSpecification : BaseSpecification<Event>
+    public class EventListSpecification : BaseSpecification<Event>
     {
-        public UpcomingEventsSpecification()
+        public EventListSpecification()
         {
-            AddCriteria(x => x.EventDate > DateTime.Now);
-
             AddInclude(x => x.Category);
             AddInclude(x => x.Tickets);
         }

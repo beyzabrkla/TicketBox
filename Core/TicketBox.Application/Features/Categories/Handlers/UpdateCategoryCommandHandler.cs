@@ -5,7 +5,7 @@ using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Categories.Handlers
 {
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand>
+    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand,Unit>
     {
         private readonly IGenericRepository<Category> _categoryRepository;
 
@@ -14,7 +14,7 @@ namespace TicketBox.Application.Features.Categories.Handlers
             _categoryRepository = categoryRepository;
         }
 
-        public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
 
@@ -26,6 +26,7 @@ namespace TicketBox.Application.Features.Categories.Handlers
             category.CategoryName = request.CategoryName;
             await _categoryRepository.UpdateAsync(category);
             await _categoryRepository.SaveChangesAsync();
+            return Unit.Value; //başarılı sonucu dön
         }
     }
 }

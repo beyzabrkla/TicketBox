@@ -7,7 +7,10 @@ namespace TicketBox.Application.Features.Events.Specifications
     {
         public EventsByPriceSpecification(decimal minPrice, decimal maxPrice)
         {
-            AddCriteria(e => e.Price >= minPrice && e.Price <= maxPrice); //ücret filtrelemesi
+            AddCriteria(x => x.Price >= minPrice && x.Price <= maxPrice);
+
+            AddInclude(x => x.Category);
+            AddInclude(x => x.Tickets);
         }
     }
 }

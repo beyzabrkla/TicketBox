@@ -3,7 +3,7 @@ using TicketBox.Domain.Entities;
 
 namespace TicketBox.Application.Features.Bookings.Commands
 {
-    public class UpdateBookingCommand :IRequest
+    public class UpdateBookingCommand :IRequest<Unit>
     {
         public int BookingId { get; set; }
         public int NewTicketCount { get; set; }

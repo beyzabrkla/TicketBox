@@ -1,6 +1,8 @@
-﻿@{
+﻿@using TicketBox.Application.Features.Categories.Results
+@model TicketBox.Application.Features.Events.ViewModels.EventListViewModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    ViewBag.Title = "Tekrar Hoş Geldiniz";
+    ViewBag.Title = "Etkinlikler";
 }
 
 <div class="max-w-container-max mx-auto">
@@ -9,9 +11,8 @@
             <h1 class="font-display-sm text-display-sm text-on-surface tracking-tight">Etkinlik Yönetimi</h1>
             <p class="font-body-md text-body-md text-on-surface-variant mt-1">TicketBox üzerindeki tüm canlı etkinlikleri denetleyin ve yönetin.</p>
         </div>
-        <button class="flex items-center gap-sm bg-primary text-on-primary px-xl py-3 rounded-xl font-label-md text-label-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all">
-            <span class="material-symbols-outlined">add</span>
-            Yeni Etkinlik Ekle
+        <button type="button" onclick="openModal(false)" class="flex items-center gap-sm bg-primary text-on-primary px-xl py-3 rounded-xl font-label-md text-label-md shadow-lg hover:shadow-xl transition-all">
+            <span class="material-symbols-outlined">add</span> Yeni Etkinlik Ekle
         </button>
     </div>
 
@@ -54,17 +55,68 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-visible">
         <div class="p-lg border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-md">
             <div class="relative w-full sm:w-96">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
                 <input class="w-full pl-12 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="İsim, ID veya mekan ile ara..." type="text" />
             </div>
             <div class="flex items-center gap-sm">
-                <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
-                    <span class="material-symbols-outlined text-[20px]">filter_list</span>
-                    Filtrele
-                </button>
+                <div class="relative">
+                    <button type="button"
+                            onclick="toggleFilterPanel()"
+                            class="px-md py-2 border border-outline-variant rounded-lg flex items-center gap-sm hover:bg-surface-container">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filtrele
+                    </button>
+
+                    <div id="filterPanel"
+                         class="hidden absolute right-0 mt-3 w-96 bg-white rounded-xl shadow-xl border border-outline-variant z-50">
+
+                        <form asp-action="Index" method="get" class="p-lg space-y-lg">
+                            <div>
+                                <label class="font-label-md mb-2 block">Kategori</label>
+                                <select name="categoryId" class="w-full border rounded-lg px-md py-2">
+                                    <option value="">Tümü</option>
+
+                                    @foreach (var item in (List<GetCategoryQueryResult>)ViewBag.Categories)
+                                    {
+                                        <option value="@item.CategoryId">
+                                            @item.CategoryName
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="font-label-md mb-2 block">Durum</label>
+                                    <select name="isActive">
+                                        <option value="">Tümü</option>
+                                        <option value="true">Aktif</option>
+                                        <option value="false">Pasif</option>
+                                    </select>
+                            </div>
+
+                            <div>
+                                <label class="font-label-md mb-2 block">
+                                    Maksimum Fiyat
+                                </label>
+                                <input type="number" name="maxPrice" />
+                            </div>
+
+                            <div class="flex justify-end gap-sm">
+                                <a asp-action="Index"
+                                   class="px-lg py-2 rounded-lg border">
+                                    Temizle
+                                </a>
+                                <button type="submit">
+                                    Filtrele
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
                     <span class="material-symbols-outlined text-[20px]">download</span>
                     CSV Aktar
@@ -76,42 +128,305 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-low border-b border-outline-variant">
-                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Etkinlik Listesi</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Etkinlik</th>
                         <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Kategori</th>
-                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Fiyat Aralığı</th>
-                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Durum</th>
                         <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Tarih</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Konum</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-center">Kapasite</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-center">Bilet</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Fiyat</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Durum</th>
                         <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-right">İşlemler</th>
                     </tr>
                 </thead>
+
                 <tbody class="divide-y divide-outline-variant/30">
-                    <tr class="hover:bg-surface-container-low transition-colors group">
-                        <td class="px-lg py-4">
-                            <div class="flex items-center gap-md">
-                                <div class="w-12 h-12 rounded-lg bg-cover bg-center shrink-0 border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAia1YSP21e4boJzDQsB6XwQpTTcrMXyIkTASFtQTb1I28jmjbYQhsEGYeeTUgeaBqYIivuLaGAsBzGyubh-AAMXiqXdK1Y-_uAzYBRaYZIvscMCSCA7oknMdpNgDY4ycQ1-KQ4BxVg5lI96DUsiehop9pfWMBiIE3cI9DybuP5FiY_9AABGEdubAgCpD1LJ_fwrEygdlvN8w50WMSY58oii6tpWvquJJtKsVDIQ7ofNrPFEOjg8EeOrCHdG9KXWmEnqxyCNEC7ArE')"></div>
-                                <div>
-                                    <p class="font-label-md text-label-md text-on-surface">Neon Nights: Synthwave Gala</p>
-                                    <p class="font-label-sm text-label-sm text-on-surface-variant">ID: TKT-1082-ZX</p>
+                    @foreach (var item in Model.Events)
+                    {
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+
+                            <!-- Etkinlik -->
+                            <td class="px-lg py-4">
+                                <div class="flex items-center gap-md">
+                                    <img src="@item.ImageUrl"
+                                         class="w-14 h-14 rounded-xl object-cover border border-outline-variant"
+                                         alt="@item.Title" />
+
+                                    <div>
+                                        <p class="font-label-md text-on-surface">
+                                            @item.Title
+                                        </p>
+
+                                        <p class="text-xs text-on-surface-variant line-clamp-2">
+                                            @item.Description
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-lg py-4"><span class="font-body-md text-body-md text-on-surface">Müzik</span></td>
-                        <td class="px-lg py-4"><span class="font-label-md text-label-md text-primary bg-primary/5 px-3 py-1 rounded-md">$120.00 - $450.00</span></td>
-                        <td class="px-lg py-4"><span class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-emerald-100 text-emerald-800">Aktif</span></td>
-                        <td class="px-lg py-4 font-body-md text-body-md text-on-surface-variant">15 Ara, 2024</td>
-                        <td class="px-lg py-4 text-right">
-                            <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-all text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                                <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-all text-on-surface-variant hover:text-error"><span class="material-symbols-outlined text-[20px]">delete</span></button>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+
+                            <!-- Kategori -->
+                            <td class="px-lg py-4">
+                                <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">
+                                    @item.CategoryName
+                                </span>
+                            </td>
+
+                            <!-- Tarih -->
+                            <td class="px-lg py-4">
+                                @item.EventDate.ToString("dd.MM.yyyy HH:mm")
+                            </td>
+
+                            <!-- Konum -->
+                            <td class="px-lg py-4">
+                                @item.Location
+                            </td>
+
+                            <!-- Kapasite -->
+                            <td class="px-lg py-4 text-center">
+                                @item.Capacity
+                            </td>
+
+                            <!-- Satılan Bilet -->
+                            <td class="px-lg py-4 text-center">
+                                @item.TicketCount
+                            </td>
+
+                            <!-- Fiyat -->
+                            <td class="px-lg py-4">
+                                <span class="font-semibold text-primary">
+                                    @item.Price ₺
+                                </span>
+                            </td>
+
+                            <!-- Durum -->
+                            <td class="px-lg py-4">
+                                @if (item.IsActive)
+                                {
+                                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm">
+                                        Aktif
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">
+                                        Pasif
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- İşlemler -->
+                            <td class="px-lg py-4">
+                                <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition">
+
+                                    <button type="button"
+                                            onclick="openModal(true,@item.EventId)"
+                                            class="w-9 h-9 rounded-lg border border-outline-variant hover:text-primary flex items-center justify-center">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </button>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="Events"
+                                          asp-action="Remove"
+                                          asp-route-id="@item.EventId"
+                                          method="post"
+                                          onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button class="w-9 h-9 rounded-lg border border-outline-variant hover:text-error flex items-center justify-center">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
-
+        
         <div class="p-lg border-t border-outline-variant flex items-center justify-between">
             <p class="font-label-sm text-label-sm text-on-surface-variant">Toplam 149 etkinlikten 1-3 arası gösteriliyor</p>
         </div>
     </div>
 </div>
+
+
+<!-- Etkinlik Ekleme/Güncelleme Modalı -->
+<div id="eventModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-2xl p-lg shadow-xl border border-outline-variant max-h-[90vh] overflow-y-auto">
+        <h2 id="modalTitle" class="font-headline-sm text-on-surface mb-lg">Yeni Etkinlik Ekle</h2>
+      
+        <form id="eventForm" asp-controller="Events" asp-action="Create" method="post"
+              class="grid grid-cols-1 md:grid-cols-2 gap-md">
+        
+              @Html.AntiForgeryToken()
+            <input type="hidden" id="EventId" name="EventId" />
+
+            <div class="md:col-span-2">
+                <label class="block font-label-md text-on-surface-variant mb-sm">Etkinlik Başlığı</label>
+                <input asp-for="CreateEventCommand.Title" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.Title" class="text-error"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block font-label-md text-on-surface-variant mb-sm">Açıklama</label>
+                <textarea asp-for="CreateEventCommand.Description" class="w-full px-md py-2 border rounded-lg"></textarea>
+                <span asp-validation-for="CreateEventCommand.Description" class="text-error"></span>
+            </div>
+
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-sm">Kategori</label>
+                <select asp-for="CreateEventCommand.CategoryId" class="w-full px-md py-2 border rounded-lg">
+                    <option value="">-- Kategori Seçin --</option>
+                    @foreach (var cat in (List<TicketBox.Application.Features.Categories.Results.GetCategoryQueryResult>)ViewBag.Categories)
+                    {
+                        <option value="@cat.CategoryId">@cat.CategoryName</option>
+                    }
+                </select>
+                <span asp-validation-for="CreateEventCommand.CategoryId" class="text-error"></span>
+            </div>
+
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-sm">Kapasite</label>
+                <input asp-for="CreateEventCommand.Capacity" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.Capacity" class="text-error"></span>
+            </div>
+
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-sm">Etkinlik Tarihi</label>
+                <input asp-for="CreateEventCommand.EventDate" type="datetime-local" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.EventDate" class="text-error"></span>
+            </div>
+
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-sm">Fiyat (₺)</label>
+                <input asp-for="CreateEventCommand.Price" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.Price" class="text-error"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block font-label-md text-on-surface-variant mb-sm">Mekan</label>
+                <input asp-for="CreateEventCommand.Location" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.Location" class="text-error"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block font-label-md text-on-surface-variant mb-sm">Görsel URL</label>
+                <input asp-for="CreateEventCommand.ImageUrl" class="w-full px-md py-2 border rounded-lg" />
+                <span asp-validation-for="CreateEventCommand.ImageUrl" class="text-error"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="flex items-center gap-sm">
+                    <input asp-for="CreateEventCommand.IsActive" class="w-5 h-5 rounded text-primary" />
+                    <span class="font-label-md text-on-surface">Etkinliği Aktif Olarak Yayınla</span>
+                </label>
+            </div>
+
+            <div class="md:col-span-2 flex justify-end gap-sm mt-md">
+                <button type="button" onclick="closeModal()" class="px-lg py-2 text-on-surface-variant font-label-md hover:bg-surface-container rounded-lg">İptal</button>
+                <button type="submit"
+                        id="submitBtn"
+                        class="px-lg py-2 bg-primary text-on-primary font-label-md rounded-lg shadow-lg hover:shadow-xl transition-all">
+                    Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+       async function openModal(isEdit = false, id = 0) {
+
+        const modal = document.getElementById('eventModal');
+        const form = document.getElementById('eventForm');
+
+        if (!isEdit) {
+            form.reset();
+            document.getElementById('EventId').value = "";
+            form.action = "/Admin/Events/Create";
+            document.getElementById("modalTitle").innerText = "Yeni Etkinlik Ekle";
+            modal.classList.remove("hidden");
+            return;
+        }
+
+        form.action = "/Admin/Events/Update";
+        document.getElementById("modalTitle").innerText = "Etkinliği Düzenle";
+
+        const response = await fetch(`/Admin/Events/GetById?id=${id}`);
+        const data = await response.json();
+
+        document.getElementById('EventId').value = data.eventId;
+        document.getElementById('CreateEventCommand_Title').value = data.title;
+        document.getElementById('CreateEventCommand_Description').value = data.description;
+        document.getElementById('CreateEventCommand_CategoryId').value = data.categoryId;
+        document.getElementById('CreateEventCommand_Capacity').value = data.capacity;
+        document.getElementById('CreateEventCommand_Price').value = data.price;
+        document.getElementById('CreateEventCommand_Location').value = data.location;
+        document.getElementById('CreateEventCommand_ImageUrl').value = data.imageUrl;
+        document.getElementById('CreateEventCommand_IsActive').checked = data.isActive;
+        document.getElementById('CreateEventCommand_EventDate').value = data.eventDate.substring(0,16);
+
+        modal.classList.remove("hidden");
+    }
+
+    function closeModal() {
+        document.getElementById('eventModal').classList.add('hidden');
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const eventForm = document.getElementById('eventForm');
+
+        eventForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(eventForm);
+
+            // Checkbox değerini her zaman 'true' veya 'false' string olarak setle
+            const isActiveCheckbox = document.getElementById('CreateEventCommand_IsActive');
+            formData.set('CreateEventCommand.IsActive', isActiveCheckbox.checked ? 'true' : 'false');
+
+            fetch(eventForm.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                return response.text();
+            })
+            .then(html => {
+                if (html) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newForm = doc.getElementById('eventForm');
+
+                    if (newForm) {
+                        document.getElementById('eventForm').innerHTML = newForm.innerHTML;
+
+                        // Hata kontrolü
+                        const hasErrors = doc.querySelectorAll('.text-error').length > 0;
+                        if (!hasErrors) {
+                            window.location.reload();
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error("Hata:", err));
+        });
+    });
+
+        function toggleFilterPanel() {
+
+        document
+            .getElementById("filterPanel")
+            .classList.toggle("hidden");
+
+    }
+</script>

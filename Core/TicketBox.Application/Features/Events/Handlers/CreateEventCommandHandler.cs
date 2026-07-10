@@ -5,7 +5,7 @@ using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
-    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
+    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand,Unit>
     {
         private readonly IGenericRepository<Event> _eventRepository;
 
@@ -15,7 +15,7 @@ namespace TicketBox.Application.Features.Events.Handlers
         }
 
         // Handle metodu, CreateEventCommand isteğini işlemek için kullanılır
-        public async Task Handle(CreateEventCommand request, CancellationToken cancellationToken) //sayfa kapandığında işlem iptal olsun 
+        public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken) //sayfa kapandığında işlem iptal olsun 
          {
             var values = new Event //Event nesnesi oluşturuluyor ve request'ten gelen verilerle dolduruluyor
             {
@@ -23,14 +23,15 @@ namespace TicketBox.Application.Features.Events.Handlers
                 Description = request.Description,
                 EventDate = request.EventDate,
                 Location = request.Location,
-                Capacity = request.Capacity,
-                Price = request.Price,
+                Capacity = request.Capacity ?? 0,
+                Price = request.Price ?? 0,
                 ImageUrl = request.ImageUrl,
                 IsActive = request.IsActive,
                 CategoryId = request.CategoryId
             };
             await _eventRepository.AddAsync(values);
             await _eventRepository.SaveChangesAsync();
+            return Unit.Value;
         }
     }
 }

@@ -7,7 +7,7 @@ using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Handlers
 {
-    public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand>
+    public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Unit>
     {
         private readonly IGenericRepository<Booking> _bookingRepository;
         private readonly IGenericRepository<Ticket> _ticketRepository;
@@ -20,7 +20,7 @@ namespace TicketBox.Application.Features.Bookings.Handlers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task Handle(CreateBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;//httpContextAccessor.HttpContext: şu anda işlem yapan kişinin bilgilerini tutar, giriş yapılıp yapılmadığını kontrol etmek için kullanılır.
                                                                                                              //ClaimTypes.NameIdentifier: giriş yapan kişinin id'sini almak için kullanılır.
@@ -60,6 +60,7 @@ namespace TicketBox.Application.Features.Bookings.Handlers
 
         //Her şey aynı anda commit edilir
         await _bookingRepository.SaveChangesAsync();
-    }
+            return Unit.Value;
+        }
 }
 }

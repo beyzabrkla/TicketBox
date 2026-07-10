@@ -33,6 +33,8 @@ internal class Program
         builder.Services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
+
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
         //Pipeline (Validation) için kritik kayıt !!!

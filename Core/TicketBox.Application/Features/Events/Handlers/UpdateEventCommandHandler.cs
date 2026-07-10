@@ -5,7 +5,7 @@ using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
-    public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand>
+    public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand,Unit>
     {
         private readonly IGenericRepository<Event> _eventRepository;
 
@@ -14,7 +14,7 @@ namespace TicketBox.Application.Features.Events.Handlers
             _eventRepository = eventRepository;
         }
 
-        public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken) //handle metodu UpdateEventCommand nesnesini alır ve veritabanındaki ilgili etkinliği günceller.
+        public async Task<Unit> Handle(UpdateEventCommand request, CancellationToken cancellationToken) //handle metodu UpdateEventCommand nesnesini alır ve veritabanındaki ilgili etkinliği günceller.
         {
             var values = await _eventRepository.GetByIdAsync(request.EventId);
 
@@ -34,6 +34,7 @@ namespace TicketBox.Application.Features.Events.Handlers
             values.CategoryId = request.CategoryId;
 
             await _eventRepository.SaveChangesAsync();
+            return Unit.Value;
         }
     }
 }

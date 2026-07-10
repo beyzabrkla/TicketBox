@@ -10,7 +10,11 @@ namespace TicketBox.Application.Mapping
         { 
             //Entity den Results a eşleşme
             CreateMap<Event, GetByIdEventQueryResult>().ReverseMap();
-            CreateMap<Event, GetEventQueryResult>().ReverseMap();
+            CreateMap<Event, GetEventQueryResult>()
+                .ForMember(x => x.CategoryName,
+                    opt => opt.MapFrom(x => x.Category.CategoryName))
+                .ForMember(x => x.TicketCount,
+                    opt => opt.MapFrom(x => x.Tickets.Count)).ReverseMap();
         }
     }
 }

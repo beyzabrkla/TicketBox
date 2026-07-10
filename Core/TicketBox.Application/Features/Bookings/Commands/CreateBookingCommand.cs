@@ -2,7 +2,7 @@
 
 namespace TicketBox.Application.Features.Bookings.Commands
 {
-    public class CreateBookingCommand :IRequest
+    public class CreateBookingCommand :IRequest<Unit>
     {   
         public DateTime BookingDate { get; set; }
         public decimal TotalAmount { get; set; }

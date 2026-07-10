@@ -2,6 +2,7 @@
 using MediatR;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.Results;
+using TicketBox.Application.Features.Events.Specifications;
 using TicketBox.Domain.Entities;
 using TicketBox.Domain.Interfaces;
 
@@ -20,7 +21,9 @@ namespace TicketBox.Application.Features.Events.Handlers
 
         public async Task<List<GetEventQueryResult>> Handle(GetEventQuery request, CancellationToken cancellationToken) //bu metot , GetEventQuery isteğini işlemek için çağrılır ve bir liste döndürür ve CancellationToken parametresi ile iptal edilebilir.
         {
-            var values = await _eventRepository.GetAllAsync();
+            var values = await _eventRepository.ListAsync(
+                new EventListSpecification(), cancellationToken); // EventListSpecification içerisinde Category ve Tickets tabloları Include edildiğinden Entity Framework ilgili ilişkili verileri de tek sorguda yükler.
+                                                                  // Daha sonra AutoMapper ile Event nesneleri GetEventQueryResult nesnelerine dönüştürülerek Controller'a geri gönderilir.
 
             return _mapper.Map<List<GetEventQueryResult>>(values);
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketBox.Persistance.Context;
 
@@ -11,9 +12,11 @@ using TicketBox.Persistance.Context;
 namespace TicketBox.Persistance.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    partial class TicketContextModelSnapshot : ModelSnapshot
+    [Migration("20260710143737_fix")]
+    partial class fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,7 +294,7 @@ namespace TicketBox.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EventDate")
+                    b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")

@@ -5,7 +5,7 @@ using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Tickets.Handlers
 {
-    public class UpdateTicketCommandHandler : IRequestHandler<UpdateTicketCommand>
+    public class UpdateTicketCommandHandler : IRequestHandler<UpdateTicketCommand,Unit>
     {
         private readonly IGenericRepository<Ticket> _ticketRepository;
 
@@ -14,7 +14,7 @@ namespace TicketBox.Application.Features.Tickets.Handlers
             _ticketRepository = ticketRepository;
         }
 
-        public async Task Handle(UpdateTicketCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateTicketCommand request, CancellationToken cancellationToken)
         {
             var values = await _ticketRepository.GetByIdAsync(request.TicketId);
         
@@ -24,7 +24,7 @@ namespace TicketBox.Application.Features.Tickets.Handlers
             }        
             await _ticketRepository.UpdateAsync(values);
             await _ticketRepository.SaveChangesAsync();
-
+            return Unit.Value;
         }
     }
 }
