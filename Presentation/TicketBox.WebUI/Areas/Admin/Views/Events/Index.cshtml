@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Tekrar Hoş Geldiniz";
+}
+
+<div class="max-w-container-max mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-lg mb-xl">
+        <div>
+            <h1 class="font-display-sm text-display-sm text-on-surface tracking-tight">Etkinlik Yönetimi</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">TicketBox üzerindeki tüm canlı etkinlikleri denetleyin ve yönetin.</p>
+        </div>
+        <button class="flex items-center gap-sm bg-primary text-on-primary px-xl py-3 rounded-xl font-label-md text-label-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all">
+            <span class="material-symbols-outlined">add</span>
+            Yeni Etkinlik Ekle
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-xl">
+        <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Aktif Etkinlikler</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">124</h3>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+                <span class="material-symbols-outlined">event_available</span>
+            </div>
+        </div>
+        <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Gelir (Bu Ay)</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">$482k</h3>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+        </div>
+        <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Tükenenler</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">18</h3>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error">
+                <span class="material-symbols-outlined">confirmation_number</span>
+            </div>
+        </div>
+        <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Taslaklar</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">7</h3>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined">edit_note</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-hidden">
+        <div class="p-lg border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-md">
+            <div class="relative w-full sm:w-96">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                <input class="w-full pl-12 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="İsim, ID veya mekan ile ara..." type="text" />
+            </div>
+            <div class="flex items-center gap-sm">
+                <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-[20px]">filter_list</span>
+                    Filtrele
+                </button>
+                <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-[20px]">download</span>
+                    CSV Aktar
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant">
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Etkinlik Listesi</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Kategori</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Fiyat Aralığı</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Durum</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Tarih</th>
+                        <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30">
+                    <tr class="hover:bg-surface-container-low transition-colors group">
+                        <td class="px-lg py-4">
+                            <div class="flex items-center gap-md">
+                                <div class="w-12 h-12 rounded-lg bg-cover bg-center shrink-0 border border-outline-variant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAia1YSP21e4boJzDQsB6XwQpTTcrMXyIkTASFtQTb1I28jmjbYQhsEGYeeTUgeaBqYIivuLaGAsBzGyubh-AAMXiqXdK1Y-_uAzYBRaYZIvscMCSCA7oknMdpNgDY4ycQ1-KQ4BxVg5lI96DUsiehop9pfWMBiIE3cI9DybuP5FiY_9AABGEdubAgCpD1LJ_fwrEygdlvN8w50WMSY58oii6tpWvquJJtKsVDIQ7ofNrPFEOjg8EeOrCHdG9KXWmEnqxyCNEC7ArE')"></div>
+                                <div>
+                                    <p class="font-label-md text-label-md text-on-surface">Neon Nights: Synthwave Gala</p>
+                                    <p class="font-label-sm text-label-sm text-on-surface-variant">ID: TKT-1082-ZX</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-lg py-4"><span class="font-body-md text-body-md text-on-surface">Müzik</span></td>
+                        <td class="px-lg py-4"><span class="font-label-md text-label-md text-primary bg-primary/5 px-3 py-1 rounded-md">$120.00 - $450.00</span></td>
+                        <td class="px-lg py-4"><span class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-emerald-100 text-emerald-800">Aktif</span></td>
+                        <td class="px-lg py-4 font-body-md text-body-md text-on-surface-variant">15 Ara, 2024</td>
+                        <td class="px-lg py-4 text-right">
+                            <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-all text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                                <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-white transition-all text-on-surface-variant hover:text-error"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="p-lg border-t border-outline-variant flex items-center justify-between">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Toplam 149 etkinlikten 1-3 arası gösteriliyor</p>
+        </div>
+    </div>
+</div>

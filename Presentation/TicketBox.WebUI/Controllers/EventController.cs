@@ -20,17 +20,9 @@ namespace TicketBox.WebUI.Controllers
             return View(values);
         }
 
-        [HttpGet]
-        public IActionResult CreateEvent()
+        public async Task<IActionResult> EventDetail()
         {
             return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateEvent(CreateEventCommand command)
-        {
-            await _mediator.Send(command); //createEventCommandHandler da çalışacak ve verileri ekleyecek
-            return RedirectToAction("EventList");
         }
     }
 }

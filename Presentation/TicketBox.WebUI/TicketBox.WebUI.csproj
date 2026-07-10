@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Infastructure\TicketBox.Persistance\TicketBox.Persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\User\Views\Shared\" />
+  </ItemGroup>
+
 </Project>

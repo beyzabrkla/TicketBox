@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewBag.Title = "Hesap Oluştur";
+    ViewBag.Subtitle = "Etkinlik tutkunları topluluğumuza katılın.";
+    ViewBag.ActiveTab = "signup";
+}
+
+<form class="space-y-4" id="auth-form" asp-controller="Auth" asp-action="SignUp" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-error text-label-sm"></div>
+
+    <div>
+        <label class="block font-medium text-sm mb-1" for="full-name">Ad Soyad</label>
+        <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
+               id="full-name" name="FullName" placeholder="Adınız Soyadınız" required type="text">
+    </div>
+
+    <div>
+        <label class="block font-medium text-sm mb-1" for="email">E-posta Adresi</label>
+        <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
+               id="email" name="Email" placeholder="ornek@sirket.com" required type="email">
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block font-medium text-sm mb-1" for="password">Şifre</label>
+            <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
+                   id="password" name="Password" placeholder="••••••••" required type="password">
+        </div>
+        <div>
+            <label class="block font-medium text-sm mb-1" for="confirm-password">Şifre Tekrarı</label>
+            <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
+                   id="confirm-password" name="ConfirmPassword" placeholder="••••••••" required type="password">
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <input class="rounded text-primary focus:ring-primary" id="terms" name="AcceptTerms" required type="checkbox">
+        <label class="text-xs text-on-surface-variant" for="terms">
+            <a class="text-primary underline" href="#">Kullanım Koşulları</a>'nı kabul ediyorum.
+        </label>
+    </div>
+
+    <button class="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-container transition-all" type="submit">
+        Kayıt Ol
+    </button>
+</form>

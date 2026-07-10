@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>@ViewBag.Title - TicketBox</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-transition {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bg-mesh {
+        background-color: #f8f9ff;
+        background-image: radial-gradient(at 0% 0%, hsla(245,100%,95%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(245,80%,90%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(330,80%,95%,1) 0, transparent 50%);
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+        darkMode: "class",
+        theme: {
+        extend: {
+        "colors": {
+        "on-tertiary": "#ffffff", "on-tertiary-container": "#93e8ff",
+        "on-primary-fixed-variant": "#3323cc", "surface-tint": "#4d44e3",
+        "outline": "#777587", "inverse-primary": "#c3c0ff",
+        "surface-dim": "#cbdbf5", "on-surface-variant": "#464555",
+        "surface-container-lowest": "#ffffff", "on-primary-container": "#dad7ff",
+        "surface-container-low": "#eff4ff", "on-tertiary-fixed": "#001f26",
+        "tertiary-fixed": "#acedff", "tertiary": "#00505f",
+        "on-secondary-container": "#fffbff", "secondary-fixed-dim": "#ffb1c7",
+        "primary": "#3525cd", "inverse-surface": "#213145",
+        "primary-container": "#4f46e5", "surface-variant": "#d3e4fe",
+        "secondary-fixed": "#ffd9e2", "surface-container": "#e5eeff",
+        "secondary": "#b5005d", "on-secondary-fixed-variant": "#8e0048",
+        "on-background": "#0b1c30", "surface-container-highest": "#d3e4fe",
+        "tertiary-fixed-dim": "#4cd7f6", "on-secondary": "#ffffff",
+        "outline-variant": "#c7c4d8", "on-secondary-fixed": "#3f001c",
+        "secondary-container": "#da2676", "on-tertiary-fixed-variant": "#004e5c",
+        "on-primary": "#ffffff", "surface-bright": "#f8f9ff",
+        "error": "#ba1a1a", "background": "#f8f9ff",
+        "on-surface": "#0b1c30", "primary-fixed-dim": "#c3c0ff",
+        "primary-fixed": "#e2dfff", "on-error-container": "#93000a",
+        "tertiary-container": "#006a7c", "surface": "#f8f9ff",
+        "on-error": "#ffffff", "error-container": "#ffdad6",
+        "inverse-on-surface": "#eaf1ff", "on-primary-fixed": "#0f0069",
+        "surface-container-high": "#dce9ff"
+        },
+        "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        "spacing": {
+        "xs": "4px", "md": "16px", "sm": "8px", "xl": "32px",
+        "gutter": "24px", "container-max": "1280px", "lg": "24px",
+        "margin-mobile": "16px", "base": "4px"
+        },
+        "fontFamily": {
+        "body-lg": ["Inter"], "headline-lg": ["Inter"], "display-sm": ["Inter"],
+        "display-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "label-sm": ["Inter"],
+        "label-md": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"]
+        },
+        "fontSize": {
+        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+        "headline-lg": ["30px", {"lineHeight": "38px", "fontWeight": "700"}],
+        "display-sm": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+        }
+        }
+        }
+        }
+    </script>
+</head>
+<body class="bg-mesh font-body-md text-on-surface min-h-screen flex flex-col items-center p-4 md:justify-center md:p-lg">
+    <header class="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200">
+        <nav class="max-w-container-max mx-auto px-lg py-md flex justify-between items-center h-20">
+
+            <div class="flex items-center gap-xl">
+                <a href="/" class="text-headline-lg font-headline-lg font-black tracking-tighter text-primary">
+                    TicketBox
+                </a>
+            </div>
+
+            <div class="flex items-center gap-md">
+                <a href="/Assistant" class="hidden md:flex items-center gap-sm px-md py-sm rounded-full bg-surface-container-low text-on-surface font-label-md text-label-md border border-gray-200 hover:bg-surface-container-high transition-all">
+                    <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+                    Mod Asistanı
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main class="w-full max-w-[1100px] bg-white rounded-xl shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-[600px]">
+        <!-- Marka Görsel Alanı (Sadece Masaüstü) -->
+        <section class="hidden md:flex flex-1 relative bg-primary items-end p-xl overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <div class="w-full h-full bg-cover bg-center opacity-70 scale-105 hover:scale-100 transition-transform duration-1000"
+                     style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9YTLaJaeoj518L6lYKkoZePTNhpRAtlwT36ClEwile98JwChlClbeZ8FKnlYmFqgy4Q-l73nK8kyfnQojsdT69TQEfGokMEGpk0PUhueqLz4GkpYFCknj43W2vUeGUR7JbtaZKA1-Xtl3ZpPh5mKDtBH-gNfsEMBfGZ3Gons8IxoqFssjUCAWhgBRCvdrD3Qk0_I2bphyX-jAMuQudXjxxrKHv87ob5ggYSb6wgMcU3N1Av-KS_A9Lhi9HPjkur7Qc4m8njW4fW4')">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+            </div>
+            <div class="relative z-10 text-on-primary">
+                <div class="mb-xl">
+                    <span class="font-headline-lg text-headline-lg font-black tracking-tighter">TicketBox</span>
+                </div>
+                <h1 class="font-display-sm text-display-sm mb-md leading-tight">Dünyanın en özel deneyimlerinin kilidini açın.</h1>
+                <p class="font-body-lg text-body-lg text-on-primary/80 max-w-md">Etkinlik organizatörleri için profesyonel altyapı ve tutkunlar için birinci adres.</p>
+                <div class="mt-xl flex items-center space-x-md">
+                    <div class="flex -space-x-sm">
+                        <div class="w-10 h-10 rounded-full border-2 border-primary bg-slate-200 overflow-hidden">
+                            <img class="w-full h-full object-cover" alt="Kullanıcı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc9SxBCUI5Ko3C_g-bsbzqj1z1NXOUvv85Z5Bt4h3u3wHP5nca5TrR7HqDnxsfkFRqTtv1QsJsLxxHTWu6_VqPHpTPMhNpebqrAYzEGwafRcHEHNUYAE4iyz6NArsb-VYSj-cfyu5M3fBnyiLWmo3Vt0E9FALAKqsWkzVBP7M23IQPLomc3OnKYGSKvhS3_reepdG3CVaPj765nn3mH3Kzo8bXbSgUbgw2mvk_PXA5gbdVR2Nqmxd2aiIWMVQjXreS1aonzecKBLQ">
+                        </div>
+                        <div class="w-10 h-10 rounded-full border-2 border-primary bg-slate-200 overflow-hidden">
+                            <img class="w-full h-full object-cover" alt="Kullanıcı" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfTYu44INaEpcD8Ko4n1WSyeZNWNUS7T94MY9aZWTvkxK1JWkpTW-9KoReQ5tet4Fyt7hLnLds7l1pJ8PoDw3rJwyOseLZJEBUWvwJR-QCb3CFaXv9J9ccyHYb7fuDHNPOzy8OIiao-nrohvpNPQOGvoaQtAdqH3uRVAKVWIoGBTmbwL2TC37QNqH-jIQNjhZdm9JTGvicw5L1HCr_KsY_gG_sokwsPYx80UankSHtVoc_ygrfQMoQ7QA1SRYdIt9wmwqxTRn6c48">
+                        </div>
+                        <div class="w-10 h-10 rounded-full border-2 border-primary bg-slate-200 overflow-hidden flex items-center justify-center bg-secondary">
+                            <span class="text-on-secondary font-label-sm">+12k</span>
+                        </div>
+                    </div>
+                    <span class="font-label-md text-on-primary/90">VEYA ŞUNUNLA DEVAM ET</span>
+                </div>
+            </div>
+            <div class="absolute top-10 right-10 p-md glass-card rounded-xl animate-bounce duration-[3000ms] hidden lg:block">
+                <div class="flex items-center space-x-sm">
+                    <div class="bg-secondary/20 p-xs rounded-lg">
+                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+                    </div>
+                    <div>
+                        <p class="font-label-sm text-primary mb-0">VIP Erişim Ayrıldı</p>
+                        <p class="text-[10px] text-on-surface-variant font-medium">2 dakika önce</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Alanı -->
+        <section class="flex-1 bg-white flex flex-col p-6 md:p-2xl overflow-y-auto">
+            <div class="md:hidden mb-xl flex items-center justify-between">
+                <span class="font-headline-lg-mobile text-headline-lg-mobile font-black text-primary">TicketBox</span>
+                <button class="bg-surface-container-high p-sm rounded-full" type="button">
+                    <span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+                </button>
+            </div>
+
+            <div class="max-w-md mx-auto w-full">
+                <div class="mb-xl">
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">@ViewBag.Title</h2>
+                    <p class="font-body-md text-on-surface-variant">@ViewBag.Subtitle</p>
+                </div>
+
+                <!-- Sekme (Tab) Bağlantıları -->
+                <div class="flex bg-surface-container-low p-base rounded-xl mb-xl">
+                    <a href="@Url.Action("SignIn", "Auth")"
+                       class="flex-1 text-center py-sm px-md rounded-lg font-label-md transition-all duration-300 @(ViewBag.ActiveTab == "signin" ? "bg-white text-primary shadow-sm" : "text-on-surface-variant hover:text-on-surface")">
+                        Giriş Yap
+                    </a>
+                    <a href="@Url.Action("SignUp", "Auth")"
+                       class="flex-1 text-center py-sm px-md rounded-lg font-label-md transition-all duration-300 @(ViewBag.ActiveTab == "signup" ? "bg-white text-primary shadow-sm" : "text-on-surface-variant hover:text-on-surface")">
+                        Kayıt Ol
+                    </a>
+                </div>
+
+                @RenderBody()
+
+                <!-- Sosyal Giriş -->
+                <div class="mt-xl flex items-center space-x-md">
+                    <hr class="flex-1 border-outline-variant">
+                    <span class="font-label-sm text-outline-variant">VEYA ŞUNUNLA DEVAM ET</span>
+                    <hr class="flex-1 border-outline-variant">
+                </div>
+                <div class="grid grid-cols-2 gap-md mt-lg">
+                    <button class="flex items-center justify-center space-x-sm py-3 px-md border border-outline-variant rounded-xl hover:bg-surface-container-low transition-colors" type="button">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+                        <span class="font-label-md">Google</span>
+                    </button>
+                    <button class="flex items-center justify-center space-x-sm py-3 px-md border border-outline-variant rounded-xl hover:bg-surface-container-low transition-colors" type="button">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"></path></svg>
+                        <span class="font-label-md">Facebook</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-2xl flex items-center justify-center space-x-md opacity-40 grayscale group hover:opacity-100 hover:grayscale-0 transition-all">
+                <div class="flex items-center space-x-xs">
+                    <span class="material-symbols-outlined text-[18px]">verified_user</span>
+                    <span class="text-[10px] font-bold tracking-widest uppercase">SSL SECURE</span>
+                </div>
+                <div class="flex items-center space-x-xs">
+                    <span class="material-symbols-outlined text-[18px]">encrypted</span>
+                    <span class="text-[10px] font-bold tracking-widest uppercase">AES-256 BIT</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="fixed bottom-gutter left-0 w-full text-center hidden md:block">
+        <p class="font-label-sm text-on-surface-variant/60">&copy; 2024 TicketBox Enterprise. Tüm hakları saklıdır. <a class="hover:text-primary transition-colors" href="#">Kullanım Şartları</a></p>
+    </footer>
+
+    <script>
+        // Form gönderim animasyonu (Giriş ve Kayıt sayfalarında ortak kullanılır)
+        document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('#auth-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function () {
+        const btn = form.querySelector('button[type="submit"]');
+        if (!btn) return;
+        btn.disabled = true;
+        btn.dataset.originalHtml = btn.innerHTML;
+        btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+        // Not: Gerçek form submit sunucuya gidecektir; bu sadece görsel geri bildirimdir.
+        });
+
+        const toggleBtn = document.querySelector('#toggle-password');
+        if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+        const input = document.getElementById('password');
+        input.type = input.type === 'password' ? 'text' : 'password';
+        });
+        }
+        });
+    </script>
+</body>
+</html>

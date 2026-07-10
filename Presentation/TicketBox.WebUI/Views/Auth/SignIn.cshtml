@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewBag.Title = "Tekrar Hoş Geldiniz";
+    ViewBag.Subtitle = "Biletlerinize erişmek için bilgilerinizi girin.";
+    ViewBag.ActiveTab = "signin";
+}
+
+<form class="space-y-6" id="auth-form" asp-controller="Auth" asp-action="SignIn" method="post">
+    @* Sunucu tarafı doğrulama özeti (opsiyonel) *@
+    <div asp-validation-summary="ModelOnly" class="text-error text-label-sm"></div>
+
+    <!-- E-posta Alanı -->
+    <div class="form-transition">
+        <label class="block font-label-md text-on-surface mb-xs" for="email">E-posta Adresi</label>
+        <div class="relative">
+            <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">mail</span>
+            <input class="w-full pl-12 pr-md py-3 rounded-xl border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                   id="email" name="Email" placeholder="ornek@sirket.com" required type="email">
+        </div>
+    </div>
+
+    <!-- Şifre Alanı -->
+    <div class="form-transition">
+        <div class="flex justify-between items-center mb-xs">
+            <label class="font-label-md text-on-surface" for="password">Şifre</label>
+            <a class="text-label-sm text-primary hover:underline" href="@Url.Action("ForgotPassword", "Account")">Şifremi Unuttum?</a>
+        </div>
+        <div class="relative">
+            <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">lock</span>
+            <input class="w-full pl-12 pr-12 py-3 rounded-xl border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                   id="password" name="Password" placeholder="••••••••" required type="password">
+                   <button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-primary" type="button" id="toggle-password">
+                <span class="material-symbols-outlined">visibility</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Beni Hatırla -->
+    <div class="flex items-center space-x-sm">
+        <input class="rounded text-primary focus:ring-primary" id="remember-me" name="RememberMe" type="checkbox">
+        <label class="text-label-sm text-on-surface-variant" for="remember-me">Beni hatırla</label>
+    </div>
+
+    <!-- CTA Butonu -->
+    <button class="w-full py-4 px-xl bg-primary-container text-white font-headline-md rounded-xl shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-sm" type="submit">
+        <span>Giriş Yap</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+</form>
