@@ -2,25 +2,25 @@
 using MediatR;
 using TicketBox.Application.Features.Bookings.Queries;
 using TicketBox.Application.Features.Bookings.Results;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Handlers
 {
     public class GetByIdBookingQueryHandler : IRequestHandler<GetByIdBookingQuery, GetByIdBookingQueryResult>
     {
-        private readonly IGenericRepository<Booking> _bookingRepository;
+        private readonly IApplicationDbContext _context; 
         private readonly IMapper _mapper;
 
-        public GetByIdBookingQueryHandler(IGenericRepository<Booking> bookingRepository, IMapper mapper)
+        public GetByIdBookingQueryHandler(IMapper mapper, IApplicationDbContext context)
         {
-            _bookingRepository = bookingRepository;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<GetByIdBookingQueryResult> Handle(GetByIdBookingQuery request, CancellationToken cancellationToken)
         {
-          var value = await _bookingRepository.GetByIdAsync(request.BookingId);
+          var value = await _context.Bookings.FindAsync(new object[] { request.BookingId }, cancellationToken);
             return _mapper.Map<GetByIdBookingQueryResult>(value);
         }
     }

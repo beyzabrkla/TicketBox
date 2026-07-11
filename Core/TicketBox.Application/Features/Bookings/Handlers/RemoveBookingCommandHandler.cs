@@ -1,23 +1,29 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Bookings.Commands;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Handlers
 {
-    public class RemoveBookingCommandHandler : IRequestHandler<RemoveBookingCommand>
+    public class RemoveBookingCommandHandler : IRequestHandler<RemoveBookingCommand,Unit>
     {
-        private readonly IGenericRepository<Booking> _genericRepository;
+        private readonly IApplicationDbContext _context;
 
-        public RemoveBookingCommandHandler(IGenericRepository<Booking> genericRepository)
+        public RemoveBookingCommandHandler(IApplicationDbContext context)
         {
-            _genericRepository = genericRepository;
+            _context = context;
         }
-        public async Task Handle(RemoveBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RemoveBookingCommand request, CancellationToken cancellationToken)
         {
-            var value = await _genericRepository.GetByIdAsync(request.BookingId);
-            await _genericRepository.RemoveAsync(value);
-            await _genericRepository.SaveChangesAsync();
+            //nesneyi çekiyoruz
+            var booking = await _context.Bookings.FindAsync(new object[] { request.BookingId },cancellationToken);
+
+            if (booking != null)
+            {
+                _context.Bookings.Remove(booking);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
+            return Unit.Value;
         }
     }
 }

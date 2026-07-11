@@ -1,32 +1,32 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Categories.Commands;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Categories.Handlers
 {
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand,Unit>
+    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, Unit>
     {
-        private readonly IGenericRepository<Category> _categoryRepository;
+        private readonly IApplicationDbContext _context;
 
-        public UpdateCategoryCommandHandler(IGenericRepository<Category> categoryRepository)
+        public UpdateCategoryCommandHandler(IApplicationDbContext context)
         {
-            _categoryRepository = categoryRepository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _context.Categories.FindAsync(new object[] { request.CategoryId }, cancellationToken);
 
             if (category == null)
             {
-                throw new Exception("Kategori Bulunamadı!"); // Pipeline burada hatayı yakalar
+                throw new Exception("Kategori Bulunamadı!");
             }
 
             category.CategoryName = request.CategoryName;
-            await _categoryRepository.UpdateAsync(category);
-            await _categoryRepository.SaveChangesAsync();
-            return Unit.Value; //başarılı sonucu dön
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

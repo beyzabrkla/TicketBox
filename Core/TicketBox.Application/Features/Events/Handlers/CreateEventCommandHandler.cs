@@ -1,23 +1,23 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Events.Commands;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
     public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand,Unit>
     {
-        private readonly IGenericRepository<Event> _eventRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateEventCommandHandler(IGenericRepository<Event> eventRepository)
+        public CreateEventCommandHandler(IApplicationDbContext context)
         {
-            _eventRepository = eventRepository;
+            _context = context;
         }
 
         // Handle metodu, CreateEventCommand isteğini işlemek için kullanılır
         public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken) //sayfa kapandığında işlem iptal olsun 
          {
-            var values = new Event //Event nesnesi oluşturuluyor ve request'ten gelen verilerle dolduruluyor
+            var newEvent = new Event //Event nesnesi oluşturuluyor ve request'ten gelen verilerle dolduruluyor
             {
                 Title = request.Title,
                 Description = request.Description,
@@ -29,8 +29,8 @@ namespace TicketBox.Application.Features.Events.Handlers
                 IsActive = request.IsActive,
                 CategoryId = request.CategoryId
             };
-            await _eventRepository.AddAsync(values);
-            await _eventRepository.SaveChangesAsync();
+            await _context.Events.AddAsync(newEvent, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

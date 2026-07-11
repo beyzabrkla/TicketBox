@@ -1,22 +1,21 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Events.Commands;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
     public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand,Unit>
     {
-        private readonly IGenericRepository<Event> _eventRepository;
+        private readonly IApplicationDbContext _context;
 
-        public UpdateEventCommandHandler(IGenericRepository<Event> eventRepository)
+        public UpdateEventCommandHandler(IApplicationDbContext context)
         {
-            _eventRepository = eventRepository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(UpdateEventCommand request, CancellationToken cancellationToken) //handle metodu UpdateEventCommand nesnesini alır ve veritabanındaki ilgili etkinliği günceller.
         {
-            var values = await _eventRepository.GetByIdAsync(request.EventId);
+            var values = await _context.Events.FindAsync(new object[] { request.EventId },cancellationToken);
 
             if (values == null)
             {
@@ -33,7 +32,7 @@ namespace TicketBox.Application.Features.Events.Handlers
             values.IsActive = request.IsActive;
             values.CategoryId = request.CategoryId;
 
-            await _eventRepository.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

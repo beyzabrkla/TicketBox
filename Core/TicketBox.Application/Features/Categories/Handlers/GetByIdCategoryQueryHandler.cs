@@ -1,27 +1,25 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Categories.Queries;
 using TicketBox.Application.Features.Categories.Results;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Categories.Handlers
 {
     public class GetByIdCategoryQueryHandler : IRequestHandler<GetByIdCategoryQuery, GetByIdCategoryQueryResult>
     {
-        private readonly IGenericRepository<Category> _categoryRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetByIdCategoryQueryHandler(IMapper mapper, IGenericRepository<Category> categoryRepository)
+        public GetByIdCategoryQueryHandler(IMapper mapper, IApplicationDbContext context)
         {
             _mapper = mapper;
-            _categoryRepository = categoryRepository;
+            _context = context;
         }
 
         public async Task<GetByIdCategoryQueryResult> Handle(GetByIdCategoryQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _context.Categories.FindAsync(new object[] { request.CategoryId },cancellationToken);
             return _mapper.Map<GetByIdCategoryQueryResult>(category);
         }
     }

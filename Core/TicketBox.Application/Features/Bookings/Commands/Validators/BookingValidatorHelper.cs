@@ -1,22 +1,24 @@
-﻿using TicketBox.Application.Features.Bookings.Specifications;
+﻿using Microsoft.EntityFrameworkCore;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Commands.Validators
 {
     public static class BookingValidatorHelper
     {
-        public static async Task<bool> IsCapacityAvailable(IGenericRepository<Event> eventRepository, IGenericRepository<Booking> bookingRepository, int eventId, int requestedCount, CancellationToken ct)
+        public static async Task<bool> IsCapacityAvailable(DbContext _context, int eventId, int requestedCount, CancellationToken ct)
         {
-            var eventEntity = await eventRepository.GetByIdAsync(eventId); //burada eventId ile eşleşen etkinliği buluyoruz
+            // Event'i çekerken Tickets koleksiyonunu da dahil ediyoruz
+            var eventEntity = await _context.Set<Event>()
+                .Include(e => e.Tickets)
+                .FirstOrDefaultAsync(e => e.EventId == eventId, ct);
+
             if (eventEntity == null) return false;
 
-            //O etkinliğe ait rezervasyonları çeken bir specification
-            var bookings = await bookingRepository.ListAsync(new BookingsByEventSpecification(eventId), ct);
+            // Etkinliğin mevcut bilet sayısı Tickets koleksiyonunun sayısı
+            var currentSoldTickets = eventEntity.Tickets?.Count ?? 0;
 
-            var currentBookings = bookings.Sum(x => x.Tickets.Count);
-
-            return (currentBookings + requestedCount) <= eventEntity.Capacity; //toplam rezervasyon sayısı + istenen bilet sayısı etkinlik kapasitesini aşmıyorsa true döndür
+            // Kapasite kontrolü
+            return (currentSoldTickets + requestedCount) <= eventEntity.Capacity;
         }
     }
 }

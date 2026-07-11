@@ -2,7 +2,7 @@
 
 namespace TicketBox.Application.Features.Tickets.Commands
 {
-    public class RemoveTicketCommand :IRequest
+    public class RemoveTicketCommand :IRequest<Unit>
     {
         public int TicketId { get; set; }
     }

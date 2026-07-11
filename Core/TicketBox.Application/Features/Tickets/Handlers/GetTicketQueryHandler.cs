@@ -1,27 +1,27 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Tickets.Queries;
 using TicketBox.Application.Features.Tickets.Results;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Tickets.Handlers
 {
     public class GetTicketQueryHandler : IRequestHandler<GetTicketQuery, List<GetTicketQueryResult>>
     {
-        private readonly IGenericRepository<Ticket> _ticketRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetTicketQueryHandler(IGenericRepository<Ticket> ticketRepository, IMapper mapper)
+        public GetTicketQueryHandler(IMapper mapper, IApplicationDbContext context)
         {
-            _ticketRepository = ticketRepository;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<List<GetTicketQueryResult>> Handle(GetTicketQuery request, CancellationToken cancellationToken)
         {
-            var values = await _ticketRepository.GetAllAsync();
-
+            var values = await _context.Tickets.ToListAsync(cancellationToken);
+    
             return _mapper.Map<List<GetTicketQueryResult>>(values);
         }
     }

@@ -1,35 +1,42 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Features.Common.Specifications;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.Results;
 using TicketBox.Application.Features.Events.Specifications;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
     public class FilterEventsQueryHandler : IRequestHandler<FilterEventsQuery, List<GetEventQueryResult>>
     {
-        private readonly IGenericRepository<Event> _eventRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public FilterEventsQueryHandler(IGenericRepository<Event> eventRepository, IMapper mapper)
+        public FilterEventsQueryHandler(IMapper mapper, IApplicationDbContext context)
         {
-            _eventRepository = eventRepository;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<List<GetEventQueryResult>> Handle(FilterEventsQuery request, CancellationToken cancellationToken)
         {
-            var values = await _eventRepository.ListAsync(
-                new FilterEventsSpecification(
+            //specification nesnesini oluştur
+            var spec = new FilterEventsSpecification(
                     request.CategoryId,
                     request.IsActive,
                     request.MinPrice,
                     request.MaxPrice,
                     request.Upcoming,
-                    request.SoldOut),
-                cancellationToken);
+                    request.SoldOut);
+
+            //queryi başlat
+            var query = _context.Events.AsQueryable();
+
+            //spec ile sorguyu işle 
+            var values = await SpecificationEvaluator<Event>.GetQuery(query, spec).ToListAsync(cancellationToken);
 
             return _mapper.Map<List<GetEventQueryResult>>(values);
         }

@@ -2,22 +2,20 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using TicketBox.Application.Features.Bookings.Commands;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Handlers
 {
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Unit>
     {
-        private readonly IGenericRepository<Booking> _bookingRepository;
-        private readonly IGenericRepository<Ticket> _ticketRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CreateBookingCommandHandler(IGenericRepository<Booking> bookingRepository, IGenericRepository<Ticket> ticketRepository, IHttpContextAccessor httpContextAccessor)
+        public CreateBookingCommandHandler(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
         {
-            _bookingRepository = bookingRepository;
-            _ticketRepository = ticketRepository;
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         public async Task<Unit> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
@@ -35,10 +33,8 @@ namespace TicketBox.Application.Features.Bookings.Handlers
                 BookingDate = request.BookingDate,
                 TotalAmount = request.TotalAmount,
                 EventId = request.EventId,
+                Tickets = new List<Ticket>() // Listeyi başlatıyoruz
             };
-
-            await _bookingRepository.AddAsync(booking);
-            await _bookingRepository.SaveChangesAsync();
 
             //Biletleri oluştur
             for (int i = 0; i < request.TicketCount; i++)
@@ -55,11 +51,11 @@ namespace TicketBox.Application.Features.Bookings.Handlers
                     IsActive = true,
                     IsUsed = false
                 };
-            await _ticketRepository.AddAsync(ticket);
-        }
+            }
 
-        //Her şey aynı anda commit edilir
-        await _bookingRepository.SaveChangesAsync();
+            await _context.Bookings.AddAsync(booking, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            
             return Unit.Value;
         }
 }

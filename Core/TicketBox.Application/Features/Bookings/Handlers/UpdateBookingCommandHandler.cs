@@ -1,30 +1,31 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Bookings.Commands;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Handlers
 {
     public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand,Unit>
     {
-        private readonly IGenericRepository<Booking> _bookingRepository;
+        private readonly IApplicationDbContext _context;
 
-        public UpdateBookingCommandHandler(IGenericRepository<Booking> bookingRepository)
+        public UpdateBookingCommandHandler(IApplicationDbContext context)
         {
-            _bookingRepository = bookingRepository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _bookingRepository.GetByIdAsync(request.BookingId);
+            var booking = await _context.Bookings.FindAsync(new object[] { request.BookingId }, cancellationToken);
+
             if (booking == null)
-                throw new Exception("Bilet bulunamadı!"); // Pipeline burada da Exception fırlatıp kullanıcıya hata döner
+                throw new Exception("Rezervasyon bulunamadı!");
+
 
             booking.BookingDate = request.BookingDate;
             booking.TotalAmount = request.TotalAmount;
 
-            await _bookingRepository.UpdateAsync(booking);
-            await _bookingRepository.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

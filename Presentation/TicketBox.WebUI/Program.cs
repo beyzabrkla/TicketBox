@@ -1,10 +1,10 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TicketBox.Application;
 using TicketBox.Application.Features.Common.Behaviours;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 using TicketBox.Persistance.Context;
-using TicketBox.Persistance.Repositories;
 
 internal class Program
 {
@@ -25,10 +25,18 @@ internal class Program
         builder.Services.AddHttpContextAccessor();
 
 
-        //Repository ve DbContext kaydı
-        builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        builder.Services.AddDbContext<TicketContext>();
-        
+        // DbContext kaydı
+        // Bağlantı dizesini appsettings.json'dan çekiyoruz
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+        // TicketContext'i bu dize ile kaydediyoruz
+        builder.Services.AddDbContext<TicketContext>(options =>
+            options.UseSqlServer(connectionString));
+
+        //Bağlı olduğu interface eşlemesi
+        builder.Services.AddScoped<IApplicationDbContext>(provider =>
+            provider.GetRequiredService<TicketContext>());
+
         // MediatR: GetEventQuery'nin olduğu (Application) katmanı tara
         builder.Services.AddMediatR(cfg =>
         {

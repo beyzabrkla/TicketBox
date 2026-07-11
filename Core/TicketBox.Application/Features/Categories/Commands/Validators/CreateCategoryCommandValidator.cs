@@ -1,14 +1,15 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 namespace TicketBox.Application.Features.Categories.Commands.Validators
 {
     public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
     {
-        private readonly IGenericRepository<Category> _categoryRepository;
-        public CreateCategoryCommandValidator(IGenericRepository<Category> categoryRepository)
+        private readonly IApplicationDbContext _context;
+        public CreateCategoryCommandValidator(IApplicationDbContext context)
         {
-            _categoryRepository = categoryRepository;
+            _context = context;
 
             RuleFor(x => x.CategoryName)
                             .NotEmpty().WithMessage("Kategori adı boş olamaz!")
@@ -23,7 +24,7 @@ namespace TicketBox.Application.Features.Categories.Commands.Validators
         {
             // bu isimde bir kategori var mı?
             //      YOKSA           //t tipindeki değişken Category sınıfına çevriliyor ve categoryName özelliğine erişiyoruz
-            return !await _categoryRepository.AnyAsync(c => ((Category)(object)c).CategoryName == categoryName, cancellationToken);
+            return !await _context.Categories.AnyAsync(c => ((Category)(object)c).CategoryName == categoryName, cancellationToken);
         }
     }
 }

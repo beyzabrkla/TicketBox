@@ -1,16 +1,15 @@
 ﻿using FluentValidation;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Tickets.Commands.Validators
 {
     public class UpdateTicketCommandValidator :AbstractValidator<UpdateTicketCommand>
     {
-        private readonly IGenericRepository<Ticket> _ticketRepository;
+        private readonly IApplicationDbContext _context;
 
-        public UpdateTicketCommandValidator(IGenericRepository<Ticket> ticketRepository)
+        public UpdateTicketCommandValidator(IApplicationDbContext context)
         {
-            _ticketRepository = ticketRepository;
+            _context = context;
 
             RuleFor(x => x.TicketId).NotEmpty();
             RuleFor(x => x.PNR).NotEmpty().Length(6);
@@ -20,14 +19,13 @@ namespace TicketBox.Application.Features.Tickets.Commands.Validators
             RuleFor(x => x.TicketId)
                 .MustAsync(async (ticketId, ct) =>
                 {
-                    var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+                    var ticket = await _context.Tickets.FindAsync(new object[] { ticketId },ct);
                     if (ticket == null) return false;
 
                     // Eğer bilet iptal edilmişse veya zaten kullanılmışsa güncellemeye izin verme
                     return ticket.IsActive && !ticket.IsUsed;
                 })
                 .WithMessage("Bu bilet iptal edilmiş veya zaten kullanılmış olduğu için güncellenemez.");
-            _ticketRepository = ticketRepository;
         }
     }
 }

@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
 
 namespace TicketBox.Persistance.Context
 {
-    public class TicketContext : IdentityDbContext<ApplicationUser>
+    public class TicketContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
-        {
-            dbContextOptionsBuilder.UseSqlServer("Server=BEYZA\\BEYZA_DEV; Initial Catalog=DbTicketBox; Integrated Security=true; Trust Server Certificate= true;");
-        }
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Booking> Bookings { get; set; }

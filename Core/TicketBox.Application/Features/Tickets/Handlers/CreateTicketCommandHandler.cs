@@ -1,17 +1,17 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Tickets.Commands;
+using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
 
 namespace TicketBox.Application.Features.Tickets.Handlers
 {
     public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand,Unit>
     {
-        private readonly IGenericRepository<Ticket> _ticketRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateTicketCommandHandler(IGenericRepository<Ticket> ticketRepository)
+        public CreateTicketCommandHandler(IApplicationDbContext context)
         {
-            _ticketRepository = ticketRepository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
@@ -27,8 +27,8 @@ namespace TicketBox.Application.Features.Tickets.Handlers
                 PNR = Guid.NewGuid().ToString().Substring(0, 6).ToUpper(), // Sistem üretiyor
                 TicketCode = $"TCK-{Guid.NewGuid().ToString().Substring(0, 6).ToUpper()}" // Sistem üretiyor
             };
-            await _ticketRepository.AddAsync(tickets);
-            await _ticketRepository.SaveChangesAsync();
+            await _context.Tickets.AddAsync(tickets);
+            await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

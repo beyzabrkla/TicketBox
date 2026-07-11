@@ -1,26 +1,25 @@
 ﻿using MediatR;
 using TicketBox.Application.Features.Events.Commands;
-using TicketBox.Domain.Entities;
-using TicketBox.Domain.Interfaces;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Events.Handlers
 {
     public class RemoveEventCommandHandler : IRequestHandler<RemoveEventCommand>
     {
-        private readonly IGenericRepository<Event> _eventRepository;
+        private readonly IApplicationDbContext _context;
 
-        public RemoveEventCommandHandler(IGenericRepository<Event> eventRepository)
+        public RemoveEventCommandHandler(IApplicationDbContext context)
         {
-            _eventRepository = eventRepository;
+            _context = context;
         }
 
         public async Task Handle(RemoveEventCommand request, CancellationToken cancellationToken)
         {
-            var values = await _eventRepository.GetByIdAsync(request.EventId);
+            var values = await _context.Events.FindAsync(new object[] { request.EventId },cancellationToken);
             if (values != null)
             {
-                await _eventRepository.RemoveAsync(values);
-                await _eventRepository.SaveChangesAsync();
+                _context.Events.Remove(values);
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
     }
