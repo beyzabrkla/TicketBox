@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Features.Bookings.Commands;
 using TicketBox.Application.Features.Categories.Queries;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.ViewModels;
@@ -64,6 +66,30 @@ namespace TicketBox.WebUI.Controllers
             }
 
             return View(result);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> BuyTicket(int eventId, int ticketCount)
+        {
+            try
+            {
+                var command = new CreateBookingCommand
+                {
+                    EventId = eventId,
+                    TicketCount = ticketCount
+                };
+
+                await _mediator.Send(command);
+
+                return RedirectToAction("MyTickets", "Profile");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+
+                return RedirectToAction("EventDetail", "Event", new { id = eventId });
+            }
         }
     }
 }

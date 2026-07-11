@@ -33,10 +33,12 @@ namespace TicketBox.Application.Features.Events.Handlers
             }
 
             var result = _mapper.Map<GetByIdEventQueryResult>(value);
+           
+            result.ServiceFee = 150;
 
             // Satılan bilet sayısını manuel set ediyoruz
             result.SoldTicketCount = value.Tickets?.Count ?? 0;
-
+           
             return result;
         }
     }

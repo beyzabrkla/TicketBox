@@ -1,4 +1,6 @@
-﻿@{
+﻿@model TicketBox.Application.Features.Auth.Commands.LoginCommand
+
+@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
     ViewBag.Title = "Tekrar Hoş Geldiniz";
     ViewBag.Subtitle = "Biletlerinize erişmek için bilgilerinizi girin.";
@@ -6,7 +8,6 @@
 }
 
 <form class="space-y-6" id="auth-form" asp-controller="Auth" asp-action="SignIn" method="post">
-    @* Sunucu tarafı doğrulama özeti (opsiyonel) *@
     <div asp-validation-summary="ModelOnly" class="text-error text-label-sm"></div>
 
     <!-- E-posta Alanı -->
@@ -15,8 +16,9 @@
         <div class="relative">
             <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">mail</span>
             <input class="w-full pl-12 pr-md py-3 rounded-xl border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all outline-none"
-                   id="email" name="Email" placeholder="ornek@sirket.com" required type="email">
+                   asp-for="Email" id="email" placeholder="ornek@sirket.com" required type="email">
         </div>
+        <span asp-validation-for="Email" class="text-error text-xs mt-1 block"></span>
     </div>
 
     <!-- Şifre Alanı -->
@@ -28,16 +30,17 @@
         <div class="relative">
             <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">lock</span>
             <input class="w-full pl-12 pr-12 py-3 rounded-xl border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all outline-none"
-                   id="password" name="Password" placeholder="••••••••" required type="password">
-                   <button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-primary" type="button" id="toggle-password">
+                   asp-for="Password" id="password" placeholder="••••••••" required type="password">
+            <button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-primary" type="button" id="toggle-password">
                 <span class="material-symbols-outlined">visibility</span>
             </button>
         </div>
+        <span asp-validation-for="Password" class="text-error text-xs mt-1 block"></span>
     </div>
 
     <!-- Beni Hatırla -->
     <div class="flex items-center space-x-sm">
-        <input class="rounded text-primary focus:ring-primary" id="remember-me" name="RememberMe" type="checkbox">
+        <input class="rounded text-primary focus:ring-primary" asp-for="RememberMe" id="remember-me" type="checkbox">
         <label class="text-label-sm text-on-surface-variant" for="remember-me">Beni hatırla</label>
     </div>
 

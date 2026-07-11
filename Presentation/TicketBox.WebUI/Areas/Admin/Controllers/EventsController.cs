@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketBox.Application.Features.Categories.Queries;
 using TicketBox.Application.Features.Events.Commands;
@@ -8,6 +9,7 @@ using TicketBox.Application.Features.Events.ViewModels;
 namespace TicketBox.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class EventsController : Controller
     {
         private readonly IMediator _mediator;

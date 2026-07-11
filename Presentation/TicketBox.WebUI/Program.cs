@@ -10,48 +10,37 @@ using TicketBox.Persistance.Context;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
-        //AutoMapper kaydı
-        //Hem Web hem Application katmanındaki profilleri bulması için
+        // AutoMapper kaydı
         builder.Services.AddAutoMapper(
-            typeof(ApplicationAssemblyReference).Assembly, // Application'ı tara
-            typeof(Program).Assembly // Kendi projenin içini de tara
+            typeof(ApplicationAssemblyReference).Assembly,
+            typeof(Program).Assembly
         );
 
-        // FluentValidation: ApplicationAssemblyReference sınıfının olduğu DLL'i tara
+        // FluentValidation
         builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
         builder.Services.AddHttpContextAccessor();
 
-
-        // DbContext kaydı
-        // Bağlantı dizesini appsettings.json'dan çekiyoruz
+        // DbContext
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-        // TicketContext'i bu dize ile kaydediyoruz
         builder.Services.AddDbContext<TicketContext>(options =>
             options.UseSqlServer(connectionString));
 
-        //Bağlı olduğu interface eşlemesi
         builder.Services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<TicketContext>());
 
-        // MediatR: GetEventQuery'nin olduğu (Application) katmanı tara
+        // MediatR
         builder.Services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
-
+            // Pipeline (Validation) davranışı
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        //Pipeline (Validation) için kritik kayıt !!!
-        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
-
-        // Identity servislerini ekle
+        // Identity
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.Password.RequireDigit = false;
@@ -64,15 +53,13 @@ internal class Program
         .AddEntityFrameworkStores<TicketContext>()
         .AddDefaultTokenProviders();
 
-        // Cookie ayarları
+        // Cookie
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.LoginPath = "/Auth/SignIn";
             options.AccessDeniedPath = "/Auth/AccessDenied";
         });
 
-
-        // Add services to the container.
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();
@@ -81,26 +68,25 @@ internal class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // Route Tanımları
         app.MapAreaControllerRoute(
-            name: "AdminArea",
-            areaName: "Admin",
-            pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
+                    name: "AdminArea",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller=AdminDashboard}/{action=Index}/{id?}");
 
         app.MapAreaControllerRoute(
             name: "UserArea",
             areaName: "User",
-            pattern: "User/{controller=Dashboard}/{action=Index}/{id?}");
+            pattern: "User/{controller=UserDashboard}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
             name: "default",

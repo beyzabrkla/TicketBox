@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TicketBox.WebUI.Areas.Admin.Controllers
+namespace TicketBox.WebUI.Areas.User.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class UsersController : Controller
+    [Authorize(Roles = "User")]
+    public class UserDashboardController : Controller
     {
         public IActionResult Index()
         {

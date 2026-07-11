@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketBox.Application.Features.Categories.Commands;
 using TicketBox.Application.Features.Categories.Queries;
@@ -6,6 +7,7 @@ using TicketBox.Application.Features.Categories.Queries;
 namespace TicketBox.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         public IMediator _mediator;

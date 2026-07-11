@@ -1,4 +1,5 @@
-﻿@{
+﻿@model TicketBox.Application.Features.Auth.Commands.RegisterCommand
+@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
     ViewBag.Title = "Hesap Oluştur";
     ViewBag.Subtitle = "Etkinlik tutkunları topluluğumuza katılın.";
@@ -9,15 +10,25 @@
     <div asp-validation-summary="ModelOnly" class="text-error text-label-sm"></div>
 
     <div>
-        <label class="block font-medium text-sm mb-1" for="full-name">Ad Soyad</label>
+        <label class="block font-medium text-sm mb-1" for="full-name">Ad</label>
         <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
-               id="full-name" name="FullName" placeholder="Adınız Soyadınız" required type="text">
+               id="name" name="Name" placeholder="Adınız" required type="text">
+        <span asp-validation-for="Name" class="text-error text-xs mt-1 block"></span>
+    </div>
+
+    <div>
+        <label class="block font-medium text-sm mb-1" for="full-name">Soyad</label>
+        <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
+               id="surname" name="Surname" placeholder="Soyadınız" required type="text">
+        <span asp-validation-for="Surname" class="text-error text-xs mt-1 block"></span>
     </div>
 
     <div>
         <label class="block font-medium text-sm mb-1" for="email">E-posta Adresi</label>
         <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
                id="email" name="Email" placeholder="ornek@sirket.com" required type="email">
+        <span asp-validation-for="Email" class="text-error text-xs mt-1 block"></span>
+
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -25,11 +36,14 @@
             <label class="block font-medium text-sm mb-1" for="password">Şifre</label>
             <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
                    id="password" name="Password" placeholder="••••••••" required type="password">
+            <span asp-validation-for="Password" class="text-error text-xs mt-1 block"></span>
+
         </div>
         <div>
             <label class="block font-medium text-sm mb-1" for="confirm-password">Şifre Tekrarı</label>
             <input class="w-full p-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary outline-none"
                    id="confirm-password" name="ConfirmPassword" placeholder="••••••••" required type="password">
+            <span asp-validation-for="ConfirmPassword" class="text-error text-xs mt-1 block"></span>
         </div>
     </div>
 

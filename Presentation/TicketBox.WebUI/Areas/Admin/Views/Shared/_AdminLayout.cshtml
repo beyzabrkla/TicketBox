@@ -260,7 +260,7 @@
             <aside class="hidden lg:flex flex-col fixed left-0 top-20 h-[calc(100vh-80px)] w-64 bg-surface border-r border-outline-variant z-40">
                 <nav class="flex flex-col gap-sm mt-md px-2">
 
-                    <a class="bg-primary-container text-on-primary-container rounded-xl px-4 py-3 flex items-center gap-md" href="/Admin/Dashboard">
+                    <a class="bg-primary-container text-on-primary-container rounded-xl px-4 py-3 flex items-center gap-md" href="/Admin/AdminDashboard">
                         <span class="material-symbols-outlined">home</span>
                         <span>Dashboard</span>
                     </a>
@@ -284,8 +284,15 @@
                         <span class="material-symbols-outlined">group</span>
                         <span>Kullanıcılar</span>
                     </a>
-
                 </nav>
+                <!-- Logout Formu -->
+                <form asp-controller="Auth" asp-action="Logout" asp-area="" method="post" class="mt-auto px-2 mb-md">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="text-error hover:bg-error-container rounded-xl px-4 py-3 flex items-center gap-md w-full transition-colors text-left">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Çıkış Yap</span>
+                    </button>
+                </form>
             </aside>
 
             <main class="flex-grow lg:ml-64 px-gutter py-xl">
