@@ -25,18 +25,33 @@
 
         .bento-grid {
         display: grid;
+        /* Gridi daha esnek yapıyoruz */
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        /* Satır yüksekliğini sabitliyoruz ama kutuların büyümesine izin veriyoruz */
         grid-auto-rows: 240px;
+        /* Kutuların boşlukları doldurması için 'dense' ekledik */
+        grid-auto-flow: dense;
         gap: 24px;
         }
+
+        /* İlk elemanın 2 satır kaplamasını sağlayan sınıf */
+        .bento-item-large {
+        grid-row: span 2;
+        }
+
         @@media (max-width: 1024px) {
         .bento-grid {
         grid-template-columns: repeat(2, 1fr);
         }
         }
+
         @@media (max-width: 640px) {
         .bento-grid {
         grid-template-columns: 1fr;
+        }
+        /* Mobilde büyük kutuyu küçültüyoruz */
+        .bento-item-large {
+        grid-row: span 1;
         }
         }
 
@@ -169,7 +184,7 @@
     </main>
 
     @await Component.InvokeAsync("Footer")
-
+    @await RenderSectionAsync("Scripts", required: false)
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {

@@ -62,7 +62,17 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UpdateCategoryCommand command)
         {
-            if (!ModelState.IsValid) return View(command);
+            if (command.CategoryId == 0)
+            {
+                ModelState.AddModelError("", "Kategori ID'si alınamadı.");
+                return View(command);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                return View(command);
+            }
 
             try
             {
@@ -72,11 +82,6 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
             catch (FluentValidation.ValidationException ex)
             {
                 foreach (var error in ex.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                return View(command);
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("", "Güncelleme sırasında bir hata oluştu.");
                 return View(command);
             }
         }

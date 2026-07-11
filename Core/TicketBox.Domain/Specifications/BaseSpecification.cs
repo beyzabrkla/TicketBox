@@ -7,16 +7,29 @@ namespace TicketBox.Domain.Specifications
         public Expression<Func<T, bool>> Criteria { get; protected set; } //T tipinde bir nesne alır ve bool döndürür. Bu bir filtreleme kriteridir
                                                                           //Örn/ bir ürünün fiyatının belirli bir değerden büyük olup olmadığını kontrol etmek için kullanılabilir. 
         public List<Expression<Func<T, object>>> Includes { get; } = new(); //T tipinde bir nesne alır ve object döndürür. Bu, ilişkili verileri yüklemek için kullanılacak ifadeleri içerir.
-                                                                            //Örn/ bir ürünün kategorisini veya tedarikçisini yüklemek için kullanılabilir.
+                                                                            // Sayfalama için yeni özellikler
+        public int Take { get; private set; }
+        public int Skip { get; private set; }
+        public bool IsPagingEnabled { get; private set; }
 
-        protected void AddCriteria(Expression<Func<T, bool>> criteria)
+        private Expression<Func<T, object>> _orderBy;
+        private Expression<Func<T, object>> _orderByDescending;
+
+        public Expression<Func<T, object>> OrderBy => _orderBy;
+        public Expression<Func<T, object>> OrderByDescending => _orderByDescending;
+
+        protected void AddCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
+        protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes.Add(includeExpression);
+
+        // SAYFALAMA METODU BURAYA EKLENECEK
+        protected void ApplyPaging(int skip, int take)
         {
-            Criteria = criteria; //Criteria özelliğini ayarlar, filtreleme kriterini belirler.
+            Skip = skip;
+            Take = take;
+            IsPagingEnabled = true;
         }
 
-        protected void AddInclude(Expression<Func<T, object>> includeExpression)
-        {
-            Includes.Add(includeExpression); //Includes listesine bir ifade ekler, ilişkili verileri yüklemek için kullanılacak ifadeleri belirler.
-        }
+        protected void ApplyOrderBy(Expression<Func<T, object>> orderByExpression) => _orderBy = orderByExpression;
+        protected void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression) => _orderByDescending = orderByDescendingExpression;
     }
 }

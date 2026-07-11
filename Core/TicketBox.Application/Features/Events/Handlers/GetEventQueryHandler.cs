@@ -21,17 +21,30 @@ namespace TicketBox.Application.Features.Events.Handlers
             _context = context;
         }
 
-        public async Task<List<GetEventQueryResult>> Handle(GetEventQuery request, CancellationToken cancellationToken) //bu metot , GetEventQuery isteğini işlemek için çağrılır ve bir liste döndürür ve CancellationToken parametresi ile iptal edilebilir.
+        public async Task<List<GetEventQueryResult>> Handle(GetEventQuery request, CancellationToken cancellationToken)
         {
-            var spec = new EventListSpecification();
+            // Artık FilterEventsSpecification kullanıyoruz
+            // request içindeki değerleri buraya aktarıyoruz
+            var spec = new FilterEventsSpecification(
+                request.CategoryIds,
+                true,                // isActive
+                null,                // minPrice
+                request.MaxPrice,    // maxPrice
+                false,               // upcoming
+                false,               // soldOut
+                request.SearchTerm,
+                request.Page > 0 ? request.Page : 1, // Sayfa numarası kontrolü
+                    6
+            );
 
-            //sorguyu başlat
+            //Sorguyu başlat ve Specification'ı uygula
             var query = _context.Events.AsQueryable();
 
-            var values = await SpecificationEvaluator<Event>.GetQuery(query, spec).ToListAsync(); // EventListSpecification içerisinde Category ve Tickets tabloları Include edildiğinden Entity Framework ilgili ilişkili verileri de tek sorguda yükler.
-                                                                
+            // SpecificationEvaluator ile veritabanı sorgusunu oluşturuyoruz
+            var values = await SpecificationEvaluator<Event>.GetQuery(query, spec).ToListAsync(cancellationToken);
 
-            return _mapper.Map<List<GetEventQueryResult>>(values);  // Daha sonra AutoMapper ile Event nesneleri GetEventQueryResult nesnelerine dönüştürülerek Controller'a geri gönderilir.
+            //AutoMapper ile dönüştürüp döndür
+            return _mapper.Map<List<GetEventQueryResult>>(values);
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using TicketBox.Domain.Entities;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Commands.Validators
 {
     public class AdminCreateBookingCommandValidator : AbstractValidator<CreateBookingCommand>
     {
-        private readonly DbContext _context;
-        public AdminCreateBookingCommandValidator(DbContext context)
+        private readonly IApplicationDbContext _context;
+
+        public AdminCreateBookingCommandValidator(IApplicationDbContext context)
         {
             _context = context;
 

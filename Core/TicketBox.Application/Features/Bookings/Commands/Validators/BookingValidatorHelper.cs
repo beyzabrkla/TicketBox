@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TicketBox.Domain.Entities;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Commands.Validators
 {
     public static class BookingValidatorHelper
     {
-        public static async Task<bool> IsCapacityAvailable(DbContext _context, int eventId, int requestedCount, CancellationToken ct)
+        public static async Task<bool> IsCapacityAvailable(IApplicationDbContext _context, int eventId, int requestedCount, CancellationToken ct)
         {
             // Event'i çekerken Tickets koleksiyonunu da dahil ediyoruz
-            var eventEntity = await _context.Set<Event>()
+            var eventEntity = await _context.Events
                 .Include(e => e.Tickets)
                 .FirstOrDefaultAsync(e => e.EventId == eventId, ct);
 

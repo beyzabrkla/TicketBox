@@ -18,6 +18,9 @@ namespace TicketBox.Application.Features.Categories.Commands.Validators
                     .MaximumLength(50).WithMessage("Kategori Adı 50 Karakterden Fazla Olamaz!")
                     .MustAsync(BeUniqueExceptCurrent).WithMessage("Bu Kategori Adı Zaten Kullanılmaktadır!");
 
+            RuleFor(x => x.IconUrl)
+                    .NotEmpty().WithMessage("Kategori Fotoğrafı boş olamaz");
+
         }
 
         private async Task<bool> BeUniqueExceptCurrent(UpdateCategoryCommand command, string categoryName, CancellationToken cancellationToken)

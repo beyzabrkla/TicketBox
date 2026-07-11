@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.Application.Features.Bookings.Commands.Validators
 {
     public class CreateBookingCommandValidator : AbstractValidator<CreateBookingCommand>
     {
-        private readonly DbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CreateBookingCommandValidator(IHttpContextAccessor httpContextAccessor, DbContext context)
+        public CreateBookingCommandValidator(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
         { 
             _httpContextAccessor = httpContextAccessor;
             _context = context;

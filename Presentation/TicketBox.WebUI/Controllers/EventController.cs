@@ -1,28 +1,69 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TicketBox.Application.Features.Events.Commands;
+using Microsoft.EntityFrameworkCore;
+using TicketBox.Application.Features.Categories.Queries;
 using TicketBox.Application.Features.Events.Queries;
+using TicketBox.Application.Features.Events.ViewModels;
+using TicketBox.Application.Interfaces;
 
 namespace TicketBox.WebUI.Controllers
 {
     public class EventController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IApplicationDbContext _context;
 
-        public EventController(IMediator mediator)
+        public EventController(IMediator mediator, IApplicationDbContext context)
         {
             _mediator = mediator;
+            _context = context;
         }
 
-        public async Task<IActionResult> EventList()
+        public async Task<IActionResult> EventList(string? searchTerm, int? categoryId, int pageNumber = 1, int pageSize = 6)
         {
-            var values = await _mediator.Send(new GetEventQuery()); //getEventQueryHandler da çalışacak ve verileri alacak 
-            return View(values);
+            var categoryResult = await _mediator.Send(new GetCategoryQuery());
+
+            ViewBag.Categories = categoryResult;
+
+            //Query hazırlanması
+            var query = new FilterEventsQuery
+            {
+                SearchTerm = searchTerm,
+                CategoryId = categoryId,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                IsActive = true,
+                SoldOut = false,
+                Upcoming = true
+            };
+
+            var result = await _mediator.Send(query);
+
+            //ViewModeli doldur
+            var viewModel = new EventListViewModel
+            {
+                Events = result.Items,
+                TotalCount = result.TotalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            return View(viewModel);
         }
 
-        public async Task<IActionResult> EventDetail()
+        [HttpGet]
+        public async Task<IActionResult> EventDetail(int id)
         {
-            return View();
+            // Mediator ile veriyi çek
+            var query = new GetByIdEventQuery { Id = id };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound(); // 404 hatası döner
+            }
+
+            return View(result);
         }
     }
 }

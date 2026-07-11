@@ -3,11 +3,11 @@ using TicketBox.Domain.Specifications;
 
 namespace TicketBox.Application.Features.Events.Specifications
 {
-    public class UpcomingEventsSpecification : BaseSpecification<Event>
+    public class PopularEventsSpecification : BaseSpecification<Event>
     {
-        public UpcomingEventsSpecification()
+        public PopularEventsSpecification(int count)
         {
-            AddCriteria(x => x.EventDate > DateTime.Now);
+            ApplyOrderByDescending(x => x.Tickets.Count(t => t.IsActive));
 
             AddInclude(x => x.Category);
             AddInclude(x => x.Tickets);

@@ -1,77 +1,57 @@
-﻿<section class="py-2xl bg-gradient-to-b from-surface-container-low/50 to-white relative overflow-hidden pt-xl">
-    <div class="max-w-container-max mx-auto px-lg relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center gap-xl">
-            <!-- AI Assistant Column -->
-            <div class="bg-primary rounded-[2.5rem] p-xl lg:p-2xl shadow-2xl relative overflow-hidden order-2 lg:order-1">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                <div class="relative z-10 flex flex-col h-full justify-between">
-                    <div>
-                        <h2 class="font-display-sm text-display-sm text-on-primary mb-md leading-tight">Nasıl bir deneyim arıyorsun?</h2>
-                        <p class="text-body-lg text-primary-fixed-dim mb-xl opacity-90">Yapay zeka destekli Mod Asistanımız, ruh haline en uygun etkinliği senin için bulsun.</p>
-                    </div>
-                    <div class="space-y-md mb-xl">
-                        <div class="bg-white/10 backdrop-blur-md text-white p-lg rounded-2xl rounded-tl-none font-body-md w-4/5 border border-white/10 shadow-lg">
-                            "Selam! Bu akşam kapalı alanda, enerjisi yüksek bir şeyler arıyorum. Bir önerin var mı?"
-                        </div>
-                        <div class="bg-white text-on-surface p-lg rounded-2xl rounded-tr-none font-body-md w-4/5 self-end border border-white/20 shadow-xl">
-                            "Harika! Vibe'ına göre Blue Note'taki Caz Gecesi'ni veya eSpor finallerini öneririm. Hangisi daha çok ilgini çeker?"
-                        </div>
-                        <div class="flex items-center gap-sm bg-white/5 p-3 rounded-full border border-white/10 w-fit">
-                            <div class="w-8 h-8 rounded-full bg-primary-fixed animate-pulse"></div>
-                            <span class="text-primary-fixed-dim font-label-md">Yazıyor...</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-md">
-                        <button class="bg-white text-primary px-xl py-md rounded-full font-headline-md hover:scale-105 transition-all shadow-lg">
-                            Sohbeti Başlat
-                        </button>
-                        <button class="border-2 border-white/30 text-white px-xl py-md rounded-full font-headline-md hover:bg-white/10 transition-all">
-                            Nasıl Çalışır?
-                        </button>
-                    </div>
+﻿<section class="py-3xl bg-surface-container-low/30 my-16">
+    <div class="max-w-container-max mx-auto px-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            
+            <!-- Sol Taraf-->
+            <div class="bg-[#4F46E5] rounded-[2rem] p-10 shadow-xl shadow-indigo-200 relative overflow-hidden text-white flex flex-col justify-between">
+                <div class="relative z-10">
+                    <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-xs font-bold tracking-wider uppercase mb-md">Yapay Zeka</span>
+                    <h2 class="text-4xl font-bold mb-sm leading-tight">Yapay Zeka Destekli<br>Deneyim</h2>
+                    <p class="text-indigo-100 text-lg opacity-90 max-w-sm">Sistemimiz mod bazlı öneriler ve derinlemesine veri analitiği ile etkinlik keşfini dönüştürür.</p>
+                </div>
+                <!-- Alt kısım -->
+                <div class="mt-xl bg-white/10 backdrop-blur-sm p-lg rounded-2xl border border-white/10">
+                    <p class="text-sm text-indigo-50 leading-relaxed">Mod asistanın ile ruh halini paylaş, saniyeler içinde sana özel etkinlik listesini hazırlayalım.</p>
                 </div>
             </div>
-            <!-- Map & Near You Column -->
-            <div class="order-1 lg:order-2">
-                <div class="mb-xl">
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface mb-md">Yakınındaki Deneyimler</h2>
-                    <p class="text-body-md text-on-surface-variant">Konumuna göre önümüzdeki 48 saat içinde gerçekleşecek en iyi etkinlikler.</p>
-                </div>
-                <div class="space-y-4 mb-xl">
-                    <div class="flex items-center gap-md p-lg bg-white border border-outline-variant/60 rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group shadow-sm">
-                        <div class="w-14 h-14 rounded-xl bg-primary-fixed-dim flex items-center justify-center text-primary shadow-inner">
-                            <span class="material-symbols-outlined text-[28px]">theater_comedy</span>
+
+            <!-- Sağ Taraf -->
+            <div class="flex flex-col gap-6">
+                <!-- Mood-Based -->
+                <div class="bg-white p-lg rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 flex items-center justify-between group">
+                    <div class="flex items-center gap-md">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+                            <span class="material-symbols-outlined text-[32px]">mood</span>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="font-headline-md text-on-surface group-hover:text-primary transition-colors text-lg">İmpro Gecesi İstanbul</h4>
-                            <p class="text-label-sm text-on-surface-variant">3.5 km uzakta • Bu akşam 20:00</p>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">Mood-Based Chatbot</h3>
+                            <p class="text-slate-500 text-sm">Ruh haline uygun etkinlikleri anlık keşfet.</p>
                         </div>
-                        <span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
                     </div>
-                    <div class="flex items-center gap-md p-lg bg-white border border-outline-variant/60 rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group shadow-sm">
-                        <div class="w-14 h-14 rounded-xl bg-secondary-fixed-dim flex items-center justify-center text-secondary shadow-inner">
-                            <span class="material-symbols-outlined text-[28px]">sports_basketball</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-headline-md text-on-surface group-hover:text-primary transition-colors text-lg">Anadolu Efes - Fenerbahçe</h4>
-                            <p class="text-label-sm text-on-surface-variant">5.2 km uzakta • Yarın 19:30</p>
-                        </div>
-                        <span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
-                    </div>
-                </div>
-                <div class="relative h-[320px] rounded-[2rem] overflow-hidden border border-outline-variant/40 shadow-2xl">
-                    <img class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGlQvxg-pBqm-LTOQeKG2pUcDcYEdIXcxWVLpPrXYd41h-MKOJGRUia600pBHU7az4hanrtnd9Si-iBU8tNbXr5-f-sF8wS0ffyCtLXM4xKhsgwgNvtUElkte9SbwW5q9_lA_ak2wooXoNsH9b1VaKg4W_uAx5EaayBo8HZtsyltkVX2ViPhoG9CaRoIE9OK-CuW2W0knqp_K5PLWJqzRccEK2GCE0glOELzt6cu3LslT-hWL7_8AiVcZj4kro5XB9KwGW2s_Zz9Q">
-                    <div class="absolute inset-0 bg-primary/5"></div>
-                    <div class="absolute top-1/4 left-1/3 bg-primary text-white p-2 rounded-full shadow-2xl animate-bounce">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                    </div>
-                    <div class="absolute bottom-1/3 right-1/4 bg-secondary text-white p-2 rounded-full shadow-2xl animate-pulse">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                    </div>
-                    <button class="absolute bottom-lg right-lg bg-white/90 backdrop-blur px-lg py-2 rounded-full text-primary font-bold flex items-center gap-xs hover:bg-white transition-all shadow-xl">
-                        Haritayı Aç <span class="material-symbols-outlined text-[20px]">map</span>
+                    <button class="px-6 py-3 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-rose-500 transition-colors">
+                        Sohbet
                     </button>
                 </div>
+
+                <!-- Tabili AI -->
+                <div class="bg-white p-lg rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center gap-md mb-md">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                            <span class="material-symbols-outlined text-[32px]">analytics</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">Tabili AI Analytics</h3>
+                            <p class="text-slate-500 text-sm">Veri setlerini sorgula, derin içgörüler al.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-md font-mono text-xs text-cyan-400 mb-md overflow-x-auto">
+                        > SELECT * FROM insights WHERE user_mood = 'energetic'
+                    </div>
+                    <button class="w-full py-3 rounded-xl bg-cyan-600 text-white font-semibold hover:bg-cyan-700 transition-all">
+                        Analiz Ekranına Git
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>

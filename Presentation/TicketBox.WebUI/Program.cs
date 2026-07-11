@@ -1,9 +1,11 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TicketBox.Application;
 using TicketBox.Application.Features.Common.Behaviours;
 using TicketBox.Application.Interfaces;
+using TicketBox.Domain.Entities;
 using TicketBox.Persistance.Context;
 
 internal class Program
@@ -49,6 +51,27 @@ internal class Program
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 
+        // Identity servislerini ekle
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<TicketContext>()
+        .AddDefaultTokenProviders();
+
+        // Cookie ayarları
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Auth/SignIn";
+            options.AccessDeniedPath = "/Auth/AccessDenied";
+        });
+
+
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
@@ -66,7 +89,7 @@ internal class Program
         app.UseStaticFiles();
 
         app.UseRouting();
-
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapAreaControllerRoute(

@@ -1,241 +1,128 @@
-﻿@{
-    ViewData["Title"] = "Etkinlikler";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@model TicketBox.Application.Features.Events.ViewModels.EventListViewModel
+@using Microsoft.AspNetCore.Http
 
-<section class="relative py-xxl flex flex-col items-center justify-center min-h-[400px] overflow-hidden rounded-xl mt-md">
+<section class="relative py-20 flex flex-col items-center justify-center min-h-[400px] overflow-hidden rounded-3xl mt-6">
     <div class="absolute inset-0 z-0">
-        <img class="w-full h-full object-cover brightness-50" data-alt="A high-energy concert scene with vibrant stage lighting and a massive crowd in a modern arena. The atmosphere is electric with deep blues and purples, reflecting a premium entertainment platform. Soft ambient glow illuminates the surroundings, creating a sense of excitement and high-production value for a professional event listing page." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMuqimu8YgiTlkQSRKjm6VIalF1ONckyGNO4zCIzyciJndL5AHQw62rxtJH-of_PIAO8w5Uo1MgckCnMYe5ffXhnxXfhIUUGdoXA_RnM5A9tORUumFokrmepzp0ulDrEW_3n98fNu86WbEL4vblCZxJ2F6LOgm_BPthmPFTpG3D6xm79OYicHAoofZVL8e7HXxk14VHx-HuYm5mYMIS_FHs-Gi-3wI_pS9xAmpvQVrZF77M-8alFr9Wj5iUyObspF4Tk0JiItly10" />
+        <img class="w-full h-full object-cover brightness-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMuqimu8YgiTlkQSRKjm6VIalF1ONckyGNO4zCIzyciJndL5AHQw62rxtJH-of_PIAO8w5Uo1MgckCnMYe5ffXhnxXfhIUUGdoXA_RnM5A9tORUumFokrmepzp0ulDrEW_3n98fNu86WbEL4vblCZxJ2F6LOgm_BPthmPFTpG3D6xm79OYicHAoofZVL8e7HXxk14VHx-HuYm5mYMIS_FHs-Gi-3wI_pS9xAmpvQVrZF77M-8alFr9Wj5iUyObspF4Tk0JiItly10" />
     </div>
-    <div class="relative z-10 w-full max-w-3xl px-md">
-        <h1 class="font-display-lg text-display-lg text-white text-center mb-xl">Sıradaki Deneyimini Bul</h1>
-        <div class="glass-card p-sm rounded-full flex items-center shadow-2xl">
-            <div class="flex-grow flex items-center px-md">
-                <span class="material-symbols-outlined text-on-surface-variant">search</span>
-                <input class="bg-transparent border-none focus:ring-0 w-full px-sm font-body-md text-on-surface placeholder:text-on-surface-variant" placeholder="Sanatçı, etkinlik veya mekan ara..." type="text" />
+    <div class="relative z-10 w-full max-w-2xl px-6">
+        <h1 class="text-5xl font-bold text-white text-center mb-10">Sıradaki Deneyimini Bul</h1>
+        <form asp-action="EventList" method="get" class="bg-white/90 backdrop-blur p-2 rounded-full flex shadow-2xl">
+            <div class="flex-grow flex items-center px-6">
+                <span class="material-symbols-outlined text-gray-500">search</span>
+                <input name="search" class="bg-transparent border-none focus:ring-0 w-full px-4 text-gray-900" placeholder="Sanatçı, etkinlik veya mekan ara..." type="text" />
             </div>
-            <div class="h-8 w-[1px] bg-outline-variant/30 hidden md:block"></div>
-            <div class="hidden md:flex items-center px-md cursor-pointer">
-                <span class="material-symbols-outlined text-on-surface-variant mr-xs">location_on</span>
-                <span class="font-label-md text-on-surface whitespace-nowrap">Tüm Türkiye</span>
-            </div>
-            <button class="bg-primary-container text-on-primary font-label-md px-xl py-md rounded-full hover:bg-primary transition-all">
-                Ara
-            </button>
-        </div>
+            <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-full hover:bg-indigo-700 transition-all">Ara</button>
+        </form>
     </div>
 </section>
-<!-- Content Area: Filters + Grid -->
-<div class="flex flex-col lg:flex-row gap-xl py-xl max-w-container-max mx-auto px-md">
-    <!-- Filters Sidebar -->
-    <aside class="w-full lg:w-72 shrink-0 space-y-xl">
-        <div class="bg-surface-container-low p-lg rounded-xl border border-outline-variant/30">
-            <h3 class="font-headline-md text-headline-md mb-md">Filtreler</h3>
-            <!-- Categories -->
-            <div class="mb-xl">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wider block mb-sm">Kategori</span>
-                <div class="space-y-sm">
-                    <label class="flex items-center space-x-sm cursor-pointer group">
-                        <input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
-                        <span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Konser</span>
-                    </label>
-                    <label class="flex items-center space-x-sm cursor-pointer group">
-                        <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
-                        <span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Tiyatro</span>
-                    </label>
-                    <label class="flex items-center space-x-sm cursor-pointer group">
-                        <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
-                        <span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Stand-up</span>
-                    </label>
-                    <label class="flex items-center space-x-sm cursor-pointer group">
-                        <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
-                        <span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Festival</span>
-                    </label>
-                </div>
+
+<!-- İçerik -->
+<div class="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-12">
+
+    <!-- Filtreler (Checkbox Yapısı) -->
+    <aside class="w-full lg:w-72 shrink-0">
+        <form asp-action="EventList" method="get" class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <h3 class="text-xl font-bold mb-6">Filtreler</h3>
+
+            <div class="space-y-3">
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (var cat in (IEnumerable<TicketBox.Application.Features.Categories.Results.GetCategoryQueryResult>)ViewBag.Categories)
+                    {
+                        var isChecked = Context.Request.Query["categoryId"] == cat.CategoryId.ToString() ? "checked" : "";
+
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="categoryId" value="@cat.CategoryId" @isChecked
+                                   class="w-5 h-5 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <span class="text-gray-700">@cat.CategoryName</span>
+                        </label>
+                    }
+                }
+                else
+                {
+                    <p class="text-sm text-gray-400">Kategori bulunamadı.</p>
+                }
             </div>
-            <!-- Price Range -->
-            <div class="mb-xl">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wider block mb-sm">Fiyat Aralığı</span>
-                <input class="w-full h-2 bg-outline-variant rounded-lg appearance-none cursor-pointer accent-primary" type="range" />
-                <div class="flex justify-between mt-xs font-label-sm text-on-surface-variant">
-                    <span>0 TL</span>
-                    <span>5000+ TL</span>
-                </div>
+            <div class="mb-8">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4">Fiyat Aralığı: <b id="price-val" class="text-indigo-600">5000</b> TL</span>
+                <input name="maxPrice" type="range" min="0" max="5000" value="5000" oninput="document.getElementById('price-val').innerText = this.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
             </div>
-            <!-- Date Filter -->
-            <div class="mb-md">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wider block mb-sm">Tarih</span>
-                <input class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20" type="date" />
-            </div>
-        </div>
-        <!-- Promo Card -->
-        <div class="bg-secondary-container p-lg rounded-xl text-on-primary">
-            <span class="material-symbols-outlined mb-sm">confirmation_number</span>
-            <h4 class="font-headline-md text-headline-md leading-tight mb-xs">Bültene Katıl</h4>
-            <p class="font-body-md opacity-90 mb-md">Yeni etkinliklerden ilk sen haberdar ol.</p>
-            <button class="w-full bg-white text-secondary font-label-md py-sm rounded-lg hover:bg-opacity-90 transition-all">Kaydol</button>
-        </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700">Uygula</button>
+        </form>
     </aside>
-    <!-- Event Bento Grid -->
-    <div class="flex-grow">
-        <div class="flex items-center justify-between mb-xl">
-            <h2 class="font-headline-lg text-headline-lg">Popüler Etkinlikler</h2>
-            <div class="flex items-center space-x-md font-label-md text-on-surface-variant">
-                <span>Sırala:</span>
-                <select class="bg-transparent border-none focus:ring-0 text-on-surface font-label-md cursor-pointer">
-                    <option>En Yeni</option>
-                    <option>Fiyat: Düşükten Yükseğe</option>
-                    <option>Tarih: Yakın</option>
-                </select>
-            </div>
+        <!-- Etkinlikler Listesi (Grid Yapısı) -->
+        <div class="flex-grow">
+        <!-- Güncellenmiş Modern Etkinlik Kartları -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            @if (Model.Events != null && Model.Events.Any())
+            {
+                foreach (var item in Model.Events)
+                {
+                    <div class="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-300 overflow-hidden flex flex-col hover:-translate-y-2">
+                        <!-- Görsel Alanı -->
+                        <div class="relative h-56 overflow-hidden">
+                            <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="@item.ImageUrl" alt="@item.Title" />
+                            <!-- Fiyat Etiketi (Modern bir badge) -->
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full font-bold text-indigo-600 shadow-sm">
+                                @item.Price.ToString("N0") TL
+                            </div>
+                        </div>
+
+                        <div class="p-6 flex flex-col flex-grow">
+                            <!-- Kategori ve Mekan Bilgisi -->
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-[10px] uppercase tracking-widest font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">@item.CategoryName</span>
+                                <span class="text-xs text-gray-400 font-medium">@item.Location</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold mb-2 text-gray-900 line-clamp-2">@item.Title</h3>
+                            <p class="text-sm text-gray-500 mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                @item.EventDate.ToString("dd MMMM, HH:mm")
+                            </p>
+
+                            <!-- Aksiyon Butonu -->
+                            <a asp-action="EventDetail" asp-route-id="@item.EventId"
+                               class="mt-auto w-full py-3 rounded-2xl bg-gray-900 text-white font-bold hover:bg-indigo-600 transition-colors text-center shadow-lg hover:shadow-indigo-500/20">
+                                Bilet Al
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-span-full text-center py-24 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                    <span class="material-symbols-outlined text-5xl text-gray-300 mb-4">search_off</span>
+                    <p class="text-gray-500 font-medium">Bu kriterlerde etkinlik bulunamadı.</p>
+                </div>
+            }
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
-            <!-- Card 1 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of a jazz pianist's hands on a grand piano in a dimly lit, atmospheric jazz club. Warm amber lighting catches the smoke in the air, creating a moody and sophisticated aesthetic. Deep shadows and high-contrast highlights emphasize the texture of the wooden piano and the emotion of the performance. Modern corporate artistic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMSnq1anSsMBQlEoDpWFlBmZ1jvlrpko6kINmuCA0Y90StoLAm6qsAx_Icn_GdAce-Pa8fQemIVk3O_YKpRDu1fnW6b6FpBMYJdziCoQMJYBqVnRglzyvskRXqmd_dQDzVQkPnD1Uw4Pv-Sk_rnRWHb2ZshFVrsR8J-jXTnMcSAp3hpW5hH_jOgGKqNCyMZYNobgJzY0StytwmjeLhAoODMEBpnYDwYc3TZM-ZUBrs26h51sDJaYXMCkOuEBJmvzHUxfCPmZjvMiU" />
-                    <div class="absolute top-md left-md bg-primary-container text-on-primary px-sm py-xs rounded font-label-sm uppercase">Konser</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">Gece Yarısı Jazz</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        14 Ekim, 21:00
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        Babylon İstanbul
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">450 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A theatrical stage set with dramatic red curtains and a single spotlight illuminating a lone actor in a classic Shakespearean costume. The composition is elegant and focused, using deep blacks and rich reds. The lighting is sharp and cinematic, capturing a moment of high drama in a premium theater setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASDDpnZKUbxJJSiN8LLhn0c6rlgSNXASg5ruiYJlHnmj0GGRVSU75K0jD2dJBZGcmfmfMUFGnxShsy7xzjg6S2ZFNhUlYxAagBgIdJfLUEMcNQfZIBcT3f6ARQtBpV5-B_M6V8uylgANTr_57S58ZbZWwIl1RL962GjKiB60R3OhUnu9e17pQu0i1sJq8XgIqwn7BvvSKDGk-Rw5WhtpD431Rp27mkavGazWirRzD4_dxTJyIzeIHkUTBh2EwgrtdLuCpmMljg0RU" />
-                    <div class="absolute top-md left-md bg-secondary-container text-on-primary px-sm py-xs rounded font-label-sm uppercase">Tiyatro</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">Bir Yaz Gecesi Rüyası</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        18 Ekim, 20:30
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        Zorlu PSM
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">320 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A wide-angle shot of an outdoor summer music festival during golden hour. A silhouette of a large crowd with their hands in the air facing a massive stage with LED screens. Warm, orange sun rays filter through the scene, creating a dreamlike and celebratory atmosphere. Vibrant festival colors with a clean, modern photographic look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKB_isnS5gAY3Qy8IzxhCpYpzJYybZBdpm2RnavaLVAT1DC2XWLGHVz4VxGW35RczvgcanOM6rXmV_baYCQI3x8fWNzyoByY9VhTA7iIku-i66aU_drtB2GR8cwlci0IC6tMdMAOMBvDrzj32WZcOrSz_ApDnMmBrh94FJZMTML_2frR4fITsGKTQVIZWavs09Jnmjbwb9UXL1rvMBq95F6kwOMQ_JwvsSm0grAsFFihXjroaNdAwvOxj24zXi47SjLM3iqwRBnzk" />
-                    <div class="absolute top-md left-md bg-tertiary-container text-on-tertiary px-sm py-xs rounded font-label-sm uppercase">Festival</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">City Music Fest '24</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        20-22 Ekim
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        Lifepark
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">1250 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 4 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A comedian standing on a small wooden stage with a classic brick wall background and a single microphone stand. A bright spotlight focuses on the center, casting soft shadows. The aesthetic is intimate and casual yet professionally shot with a crisp, clean corporate modern feel. Accents of warm light enhance the friendly and engaging mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkciRtz4qg6cgeG_rgC3KtAiLZbASbWPj6XUnIRxajXCwGW31AwmnPAFQWML6q4wi_CjJ_PFyxGA9V4YEfB03P1beKvVe0TeaTRu9ADs3_R28Yfqk25V5ADmRJcQIuVY74aPfK2H50pgUHPBWrYLjmmeGkdBbcRnFYBm4CucpbvwSG3PyfeF4nKt312c5cQQ4VT2GOATFY7WjVnZnN-cbxMcbQ1B41zfi8QMbimA4-1018h01vXt0MUh0x2V5sGyAfy7wBMqcHAOw" />
-                    <div class="absolute top-md left-md bg-primary-container text-on-primary px-sm py-xs rounded font-label-sm uppercase">Stand-up</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">Kahkaha Gecesi</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        15 Ekim, 21:00
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        BKM Mutfak
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">200 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 5 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An electronic dance music concert with laser lights piercing through a dark room. Neon greens, blues, and pinks create a high-tech and energetic vibe. The camera perspective is from within the crowd, capturing the movement and intensity of the lighting. A sharp, high-definition digital render style for a premium experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj0PpmPaeIvvOAzeSf_Qz8ohMuDd3yjwNWopFlgoxbWPCiNU2fD0mIwAWMbUaAFnK496Q3QeijNuJ-KNIVph4tdeVQ1TWA8TXQVAJbpKaiS_tJ2PISW9N2-H9Kd9VcwzdtgG32oFHZQSHx_I-FaOK6_8IqjUxQDKvyAvxHl7XlIFHYbAudDh8iimEqI3Rlhqrf6pLQSmRVFDIY-WZnnxN7XWJP1nS2XwgMPlSFltNhTUbwKcPy6-Thl_GpTAQIQZbErti9X-1Pyww" />
-                    <div class="absolute top-md left-md bg-primary-container text-on-primary px-sm py-xs rounded font-label-sm uppercase">Konser</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">Electro Sessions</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        27 Ekim, 22:00
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        Volkswagen Arena
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">600 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 6 -->
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                <div class="relative h-48 overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A minimal white art gallery space with people observing a large, modern abstract painting. The lighting is bright and even, emphasizing the clean lines and spaciousness of the venue. A high-end, corporate modern aesthetic with a focus on art and culture. Soft shadows and a neutral color palette create a calm, sophisticated mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuN4bjwikuOU2BeBtzp2Sfwxg03lnnPpN4DzPRXcRx65d4LBRXb4ADLSDLpm0yzsC3-PC2BUHIShVS91Yhx3DK3dW8NwPp7PVkCJLQZLGyILA2haZ_wX28gzSUklh-q_RXbD9yIOeITuzr_Umc_gvRV0FwG8_rJnWESEs93ye1J2Gxp6cYFNWL8HHl3G0lflPHup2qqzkf-FIZXHD7JBYT2B9g5hc0yfOWFxsA5EK5W708W_r60n4Wk2bTmChOwv5oqbECaqZmZJI" />
-                    <div class="absolute top-md left-md bg-primary-container text-on-primary px-sm py-xs rounded font-label-sm uppercase">Eğitim</div>
-                </div>
-                <div class="p-lg flex flex-col flex-grow">
-                    <h3 class="font-headline-md text-headline-md mb-xs">Sanat Tarihi Atölyesi</h3>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-sm">
-                        <span class="material-symbols-outlined text-sm mr-xs">calendar_today</span>
-                        12 Ekim, 14:00
-                    </div>
-                    <div class="flex items-center text-on-surface-variant font-label-md mb-md">
-                        <span class="material-symbols-outlined text-sm mr-xs">location_on</span>
-                        Pera Müzesi
-                    </div>
-                    <div class="mt-auto ticket-punch border-t border-dashed border-outline-variant/50 pt-lg flex items-center justify-between">
-                        <div class="font-headline-md text-primary">150 TL</div>
-                        <button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg font-label-md hover:bg-primary transition-colors">Bilet Al</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Sayfalama -->
+            <nav class="flex items-center gap-2 mt-12 justify-center">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a href="@Url.Action("EventList", "Event", new
+                       {
+                           searchTerm = Context.Request.Query["searchTerm"],
+                           categoryId = Context.Request.Query["categoryId"],
+                           maxPrice = Context.Request.Query["maxPrice"],
+                           pageNumber = i
+                       })"
+                       class="@(i == Model.PageNumber ? "bg-indigo-600 text-white" : "border") px-4 py-2 rounded-lg">
+                        @i
+                    </a>
+                }
+            </nav>
         </div>
-        <!-- Pagination -->
-        <div class="mt-xxl flex justify-center items-center space-x-md">
-            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant hover:bg-surface-container-low transition-colors">
-                <span class="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary-container text-on-primary font-label-md">1</button>
-            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant font-label-md hover:bg-surface-container-low transition-colors">2</button>
-            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant font-label-md hover:bg-surface-container-low transition-colors">3</button>
-            <span class="text-on-surface-variant">...</span>
-            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant font-label-md hover:bg-surface-container-low transition-colors">12</button>
-            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant hover:bg-surface-container-low transition-colors">
-                <span class="material-symbols-outlined">chevron_right</span>
-            </button>
-        </div>
-    </div>
 </div>
+
+<script>
+        function goToPage(page) {
+        let url = new URL(window.location.href);
+        url.searchParams.set('pageNumber', page); // Sadece sayfa numarasını değiştirir, diğerlerini korur
+        window.location.href = url.toString();
+    }
+</script>

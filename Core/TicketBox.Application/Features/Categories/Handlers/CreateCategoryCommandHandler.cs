@@ -18,7 +18,9 @@ namespace TicketBox.Application.Features.Categories.Handlers
         {
             var category = new Category
             {
-                CategoryName = request.CategoryName
+                CategoryName = request.CategoryName,
+                IconUrl = request.IconUrl,
+                IconName = request.IconName
             };
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync(cancellationToken);

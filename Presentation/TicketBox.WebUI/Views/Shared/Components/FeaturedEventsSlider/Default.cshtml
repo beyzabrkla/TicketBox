@@ -1,4 +1,5 @@
-﻿<section class="py-2xl relative">
+﻿@model List<TicketBox.Application.Features.Events.Results.EventResult>
+<section class="py-2xl relative">
     <div class="absolute inset-0 bg-gradient-to-b from-[#f8f9ff] via-white to-[#f8f9ff] pointer-events-none"></div>
     <div class="max-w-container-max mx-auto px-lg relative z-10">
         <div class="flex justify-between items-end mb-xl">
@@ -16,59 +17,30 @@
             </div>
         </div>
         <div class="flex gap-lg overflow-x-auto pb-xl custom-scrollbar snap-x scroll-pl-6">
-            <!-- Card 1 -->
-            <div class="min-w-[340px] md:min-w-[440px] snap-start group bg-white rounded-2xl overflow-hidden border border-outline-variant/50 hover:border-primary/30 transition-all shadow-sm hover:shadow-xl">
-                <div class="relative h-64 overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0hGSJ-ZcXbL3Qw0JFvot4-6FRRruZHco6CWXlf4dQzy1KnQ2vbMwUbq0xe2y8GQY8tdcT5wkdVliT_rjokCyp39OfFY0YG9WUz6hIUem-8tsTIc_pi80UXVfr2srTTb9TeX2EPnSIAdXsEc3fFGpLPbIQUqcqjg5bngocfgBul8hMUPO1KIJJRZ9D9lklgZaDQHwd4L5V1wV2pOf3OV76DLJ-qM9i5b-xErIoowWq1TKe7YkymhbBD_Qs_KzwtiyhMsHroeFszg0">
-                    <div class="absolute top-md right-md bg-secondary text-on-secondary px-md py-1 rounded-full font-label-md text-label-md">Hızla Tükeniyor</div>
-                </div>
-                <div class="p-lg">
-                    <div class="flex justify-between items-center mb-sm">
-                        <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wide">Müzik • Stadyum Turu</span>
-                        <span class="font-label-md text-label-md text-primary-container font-bold">850 TL'den</span>
+            @foreach (var item in Model)
+            {
+                <div class="min-w-[340px] md:min-w-[440px] snap-start group bg-white rounded-2xl overflow-hidden border border-outline-variant/50 hover:border-primary/30 transition-all shadow-sm hover:shadow-xl">
+                    <div class="relative h-64 overflow-hidden">
+                        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="@item.ImageUrl" alt="@item.Title">
+
+                        @if (item.IsFastSelling)
+                        {
+                            <div class="absolute top-md right-md bg-secondary text-on-secondary px-md py-1 rounded-full font-label-md text-label-md">Hızla Tükeniyor</div>
+                        }
                     </div>
-                    <h3 class="font-headline-md text-headline-md text-on-surface mb-sm group-hover:text-primary transition-colors">Neon Horizon Dünya Turu</h3>
-                    <div class="flex items-center gap-xs text-on-surface-variant text-label-md">
-                        <span class="material-symbols-outlined text-[18px]">location_on</span>
-                        MetLife Stadyumu, NY
-                    </div>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="min-w-[340px] md:min-w-[440px] snap-start group bg-white rounded-2xl overflow-hidden border border-outline-variant/50 hover:border-primary/30 transition-all shadow-sm hover:shadow-xl">
-                <div class="relative h-64 overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCgNoHQkvnlih_AxUyy5O0QF9UyBRbAD1dxfD3PvxJiV5OJSjTQ3Mg7Zbs1sjTIo4BsASCp35Upg7LFIUVLFj49a02A-W3wVIOjKNkGmPHAH0qaBJrp60OKRYB9aErzRnTaAdMrr9VZIeekklcpxHHKWn8S59tLdqL2g124DV1iE5FRhDXonKgmhpArPinU8bjJvLO8bagjVzSC9Brkmfgm3xwVZf3iK-oUCcKGWqjfPwYomI7EKuNw9RH7Ye59N_KWXzCusqvm0I">
-                    <div class="absolute top-md right-md bg-tertiary text-on-tertiary px-md py-1 rounded-full font-label-md text-label-md">Yeni Açılış</div>
-                </div>
-                <div class="p-lg">
-                    <div class="flex justify-between items-center mb-sm">
-                        <span class="font-label-sm text-label-sm text-tertiary font-bold uppercase tracking-wide">Tiyatro • Broadway</span>
-                        <span class="font-label-md text-label-md text-primary-container font-bold">1200 TL'den</span>
-                    </div>
-                    <h3 class="font-headline-md text-headline-md text-on-surface mb-sm group-hover:text-primary transition-colors">Mimarların Sessizliği</h3>
-                    <div class="flex items-center gap-xs text-on-surface-variant text-label-md">
-                        <span class="material-symbols-outlined text-[18px]">location_on</span>
-                        Majestic Tiyatro, NYC
+                    <div class="p-lg">
+                        <div class="flex justify-between items-center mb-sm">
+                            <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wide">@item.CategoryName</span>
+                            <span class="font-label-md text-label-md text-primary-container font-bold">@item.Price TL'den</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-sm group-hover:text-primary transition-colors">@item.Title</h3>
+                        <div class="flex items-center gap-xs text-on-surface-variant text-label-md">
+                            <span class="material-symbols-outlined text-[18px]">location_on</span>
+                            @item.Location
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="min-w-[340px] md:min-w-[440px] snap-start group bg-white rounded-2xl overflow-hidden border border-outline-variant/50 hover:border-primary/30 transition-all shadow-sm hover:shadow-xl">
-                <div class="relative h-64 overflow-hidden">
-                    <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDejfNZVKz0HMMZbW9at3Pp5XWQhm9FJkW_GGRK3KD7W1IBOBaRWFtul41Wi_07tpEvHt2YFjDNS93OlnMyYos3l-bD3-TgjNzbVt-GQMTfBbsz_qJcZCh8HNwZ2pSBwxiidzGjSg2ckQ7R4Gk5MUltvdxlDqThtGxA1RZCN5AFGHMWiWEpv7bzAjpdr5ffWYLsEPGh4aQI3mWwslfFdXaS77JkJeRN3ZHt984s_KqStmCA3gAigs7gtXIb9O3agvCvJeMw2Il8Xfw">
-                </div>
-                <div class="p-lg">
-                    <div class="flex justify-between items-center mb-sm">
-                        <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wide">Festival • Deneyim</span>
-                        <span class="font-label-md text-label-md text-primary-container font-bold">2500 TL'den</span>
-                    </div>
-                    <h3 class="font-headline-md text-headline-md text-on-surface mb-sm group-hover:text-primary transition-colors">Solstice Soundscape 2024</h3>
-                    <div class="flex items-center gap-xs text-on-surface-variant text-label-md">
-                        <span class="material-symbols-outlined text-[18px]">location_on</span>
-                        Golden Gate Park, SF
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>

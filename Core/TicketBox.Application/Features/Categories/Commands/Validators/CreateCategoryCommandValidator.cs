@@ -17,6 +17,9 @@ namespace TicketBox.Application.Features.Categories.Commands.Validators
                             .MaximumLength(50).WithMessage("Kategori adı en fazla 50 karakter olabilir.")
                             // Veritabanı kontrolü
                             .MustAsync(BeUniqueCategoryName).WithMessage("Bu kategori adı zaten mevcut!");
+
+            RuleFor(x => x.IconUrl)
+                .NotEmpty().WithMessage("Kategori Fotoğrafı boş olamaz");
         }
 
         // Asenkron veritabanı kontrol metodu

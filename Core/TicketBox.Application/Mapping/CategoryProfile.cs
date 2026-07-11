@@ -8,7 +8,15 @@ namespace TicketBox.Application.Mapping
     {
         public CategoryProfile()
         {
-            CreateMap<Category, GetCategoryQueryResult>().ReverseMap();
+            CreateMap<Category, GetCategoryQueryResult>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CategoryName))
+                .ForMember(dest => dest.IconName, opt => opt.MapFrom(src => src.IconName))
+                .ForMember(dest => dest.IconUrl, opt => opt.MapFrom(src => src.IconUrl))
+                // Count alanı burada dolduruluyor:
+                .ForMember(dest => dest.EventCount, opt => opt.MapFrom(src => src.Events != null ? src.Events.Count : 0))
+                .ReverseMap();
+
             CreateMap<Category, GetByIdCategoryQueryResult>().ReverseMap();
         }
     }

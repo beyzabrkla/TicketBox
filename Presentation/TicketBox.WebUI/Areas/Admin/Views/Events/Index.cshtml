@@ -20,34 +20,37 @@
         <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
             <div>
                 <p class="font-label-sm text-label-sm text-on-surface-variant">Aktif Etkinlikler</p>
-                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">124</h3>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">@ViewBag.Stats.ActiveEventCount</h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
                 <span class="material-symbols-outlined">event_available</span>
             </div>
         </div>
+
         <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
             <div>
                 <p class="font-label-sm text-label-sm text-on-surface-variant">Gelir (Bu Ay)</p>
-                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">$482k</h3>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">@ViewBag.Stats.MonthlyRevenue.ToString("N0") ₺</h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-primary">
                 <span class="material-symbols-outlined">payments</span>
             </div>
         </div>
+
         <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
             <div>
                 <p class="font-label-sm text-label-sm text-on-surface-variant">Tükenenler</p>
-                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">18</h3>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">@ViewBag.Stats.SoldOutEventCount</h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error">
                 <span class="material-symbols-outlined">confirmation_number</span>
             </div>
         </div>
+
         <div class="bg-white p-lg rounded-xl shadow-ambient border border-outline-variant/30 flex items-center justify-between">
             <div>
                 <p class="font-label-sm text-label-sm text-on-surface-variant">Taslaklar</p>
-                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">7</h3>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface mt-1">@ViewBag.Stats.DraftEventCount</h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
                 <span class="material-symbols-outlined">edit_note</span>
@@ -57,10 +60,16 @@
 
     <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-visible">
         <div class="p-lg border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-md">
-            <div class="relative w-full sm:w-96">
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-                <input class="w-full pl-12 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="İsim, ID veya mekan ile ara..." type="text" />
-            </div>
+            <form asp-action="Index" method="get" class="relative w-full sm:w-96">
+                <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant flex items-center">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <input class="w-full pl-12 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                       name="searchTerm"
+                       type="text"
+                       placeholder="İsim, ID veya mekan ile ara..."
+                       value="@Context.Request.Query["searchTerm"]" />
+            </form>
             <div class="flex items-center gap-sm">
                 <div class="relative">
                     <button type="button"
@@ -247,9 +256,38 @@
                 </tbody>
             </table>
         </div>
-        
-        <div class="p-lg border-t border-outline-variant flex items-center justify-between">
-            <p class="font-label-sm text-label-sm text-on-surface-variant">Toplam 149 etkinlikten 1-3 arası gösteriliyor</p>
+        <div class="p-lg border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-md">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">
+                Toplam <span class="font-bold text-on-surface">@Model.TotalCount</span> etkinlikten
+                <span class="font-bold text-on-surface">@(((Model.PageNumber - 1) * Model.PageSize) + 1) - @(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount))</span> arası gösteriliyor
+            </p>
+
+            <nav class="flex items-center gap-xs">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                   asp-route-searchTerm="@Context.Request.Query["searchTerm"]"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container @(Model.PageNumber <= 1 ? "pointer-events-none opacity-50" : "")">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </a>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchTerm="@Context.Request.Query["searchTerm"]"
+                       class="w-9 h-9 flex items-center justify-center rounded-lg text-label-md transition-colors
+                        @(i == Model.PageNumber ? "bg-primary text-on-primary" : "border border-outline-variant hover:bg-surface-container")">
+                        @i
+                    </a>
+                }
+
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                   asp-route-searchTerm="@Context.Request.Query["searchTerm"]"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container @(Model.PageNumber >= Model.TotalPages ? "pointer-events-none opacity-50" : "")">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </a>
+            </nav>
         </div>
     </div>
 </div>

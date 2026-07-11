@@ -17,32 +17,36 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(
-            int? categoryId,
-            bool? isActive,
-            decimal? minPrice,
-            decimal? maxPrice,
-            bool upcoming = false,
-            bool soldOut = false)
+        public async Task<IActionResult> Index(string? searchTerm, int? categoryId, bool? isActive,
+            decimal? minPrice, decimal? maxPrice, bool upcoming = false, bool soldOut = false,
+            int pageNumber = 1, int pageSize = 5)
         {
             // Filtre alanlarında kullanılacak kategori listesini getiriyoruz.
             ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
+            ViewBag.Stats = await _mediator.Send(new GetEventStatsQuery()); // bu 
 
             // Kullanıcının seçtiği filtre bilgilerini FilterEventsQuery içerisine gönderiyoruz.
             // Eğer hiçbir filtre seçilmezse tüm etkinlikler listelenir, seçilen filtreler varsa yalnızca o kriterlere uyan etkinlikler getirilir.
-            
+            // Mediator sorgusunu sayfalama ve arama kriterleri ile güncelle
+            var result = await _mediator.Send(new FilterEventsQuery
+            {
+                SearchTerm = searchTerm,
+                CategoryId = categoryId,
+                IsActive = isActive,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                Upcoming = upcoming,
+                SoldOut = soldOut,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            });
+
             var viewModel = new EventListViewModel
             {
-                Events = await _mediator.Send(new FilterEventsQuery
-                {
-                    CategoryId = categoryId,
-                    IsActive = isActive,
-                    MinPrice = minPrice,
-                    MaxPrice = maxPrice,
-                    Upcoming = upcoming,
-                    SoldOut = soldOut
-                }),
-                // Modal üzerinden yeni etkinlik ekleme işlemi için boş command nesnesi oluşturuyoruz.
+                Events = result.Items,          // FilterEventsQuery'den dönen liste
+                TotalCount = result.TotalCount, // Sayfalama ve sayaçlar için toplam sayı
+                PageNumber = pageNumber,
+                PageSize = pageSize,
                 CreateEventCommand = new CreateEventCommand()
             };
 
@@ -73,7 +77,11 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
 
                 ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
 
-                model.Events = await _mediator.Send(new FilterEventsQuery());
+                var result = await _mediator.Send(new FilterEventsQuery());
+                model.Events = result.Items;
+                model.TotalCount = result.TotalCount; // Sayfa yapısının bozulmaması için 
+                model.PageNumber = 1;
+                model.PageSize = model.PageSize > 0 ? model.PageSize : 5;
 
                 return View("Index", model);
             }
@@ -125,7 +133,13 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
                 }
 
                 ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
-                model.Events = await _mediator.Send(new FilterEventsQuery());
+
+                // Mediator'dan dönen result'ın .Items özelliğini atıyoruz.
+                var result = await _mediator.Send(new FilterEventsQuery());
+                model.Events = result.Items;
+                model.TotalCount = result.TotalCount; // Sayfa yapısının bozulmaması için bunu da ekleyin
+                model.PageNumber = 1;
+                model.PageSize = model.PageSize > 0 ? model.PageSize : 5;
 
                 return View("Index", model);
             }

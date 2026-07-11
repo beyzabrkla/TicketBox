@@ -1,4 +1,6 @@
-﻿<section class="py-2xl bg-surface-container-low/50">
+﻿@model List<TicketBox.Application.Features.Categories.Results.GetCategoryQueryResult>
+
+<section class="py-2xl bg-surface-container-low/50">
     <div class="max-w-container-max mx-auto px-lg">
         <div class="flex flex-col lg:flex-row items-center justify-between gap-xl mb-2xl mb-xl">
             <div class="max-w-md">
@@ -21,51 +23,23 @@
             </div>
         </div>
         <div class="bento-grid">
-            <div class="col-span-1 row-span-2 relative rounded-3xl overflow-hidden group shadow-lg">
-                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoGA-Ix3SZ1aNoqBwBQM1vZ98uJdgF8MkR_YOYQ8Eu9A92gRVN-BOJWIhx6ax5_BTPTJKtEx4wjKDwhimjMWcNmP9BYGJDcDYnIW0zhwzDgKKHB7lVmRu5Ttlrm0XAuKImgXgEj5xC6dDJkPM81lbB9FDsYcNoFuYbFghnn0ix0-lyGwXn9DV2SYHKz-foHnlFws7wcZ6ltV5a6ecRdkGmKP3iUje6MW9fK1wNWfSSZ2s1qvS5hd-2DpHXI1Oua1Lwlg12E5p2LU8">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 p-lg text-white w-full">
-                    <div class="bg-primary px-sm py-1 rounded w-fit text-label-sm mb-sm uppercase font-bold tracking-widest">Klasik Rock</div>
-                    <h4 class="font-headline-md text-headline-md">Efsaneler Ölmez</h4>
-                    <p class="text-body-md opacity-80 mt-1">15 Haziran • O2 Arena</p>
-                </div>
-            </div>
-            <div class="col-span-2 row-span-1 relative rounded-3xl overflow-hidden group shadow-lg">
-                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfXnGUsCzTaPUFYmw7iF5PdcxTC-EIdbSy26F13IC2zbEimVVD2AG4uCfCy-cIRHgNbxGGHVv1paVHG3RmTs5JQwwsS8YRHgG-seHT4jaWQ4bg3oh4n3qLxALK9F6kTKJbbzzl1zWZzWf4S7CJWCJ_N5cGQNFxtkBJV-jOvlyRgrTh55OmVPzzJp8Mp6LGL__Zzz1aXgyEig3oeFxg8Cz7zwNzfGfHhHEJdWDHC6-AugBccEJMig5lo80-Z49XDTMQ8bHbVqnVZ2k">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col justify-center p-xl text-white max-w-sm">
-                    <span class="font-label-sm uppercase font-bold mb-sm text-tertiary-fixed tracking-widest">Teknoloji &amp; İş</span>
-                    <h4 class="font-display-sm text-display-sm mb-md leading-tight">Yapay Zeka Zirvesi</h4>
-                    <button class="w-fit bg-white text-primary px-lg py-sm rounded-full font-label-md hover:bg-primary hover:text-white transition-all shadow-md">Kayıt Ol</button>
-                </div>
-            </div>
-            <div class="col-span-1 row-span-1 relative rounded-3xl overflow-hidden group shadow-lg">
-                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg-faNY58HhoFnrOSLf1tYcFiTyXmKDXqBE3MPeNWJ7BzwFmtmhV7Q0v1wqvgyvxn4Y6eVBq92wOzI0dCtlem3w_5Q3T2IFavYCFj-1zcsJAtiUPUJMU-Nf1K-kFKPVqGPvKLKKgKupFjnKNijd3dMpDVcNeZzS3uwcHqLy82cnGqnSFme-5CxAiTpHQ3ODoDgOzu-AAdYS9BuPtqGhdARI90eSaFAJLM9CM1koixy-wnALww0bShtAsEz0FhiNz7bOYBmUMHhBgE">
-                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                <div class="absolute bottom-lg left-lg text-white">
-                    <span class="font-label-sm uppercase opacity-80 tracking-widest">Spor</span>
-                    <h4 class="font-headline-md text-headline-md">Grand Slam Serisi</h4>
-                </div>
-            </div>
-            <div class="col-span-1 row-span-1 relative rounded-3xl overflow-hidden group shadow-lg">
-                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoutsArz6PGs26MyJKbAtFBwcLHyFYxBc8-ot2EeWboKJ10DWx_vFYeG1zmjPPu_whVs9DsDuTo74b1yURmhNMT0nGS54CWACgtdKkxSzP_yK3FIO1OLHutccG_ABD27ejF-Je_9C0iED9w6R5aVyypPZnuY-gdc0QnzI2cn3sBG4zk1w-gvoc0dQITEwi3dyLXYhbX1hhwknfDJ1qm-getT1vsMM8BmwUipNYNfgFr8eesIh2tELxsinZNjlY66gv7By0Gs9ifog">
-                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                <div class="absolute bottom-lg left-lg text-white">
-                    <span class="font-label-sm uppercase opacity-80 tracking-widest">Stand-up</span>
-                    <h4 class="font-headline-md text-headline-md">Gece Kahkahaları</h4>
-                </div>
-            </div>
-            <div class="col-span-2 row-span-1 relative rounded-3xl overflow-hidden group shadow-lg">
-                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACoj9K9mJ-HjTscQebA3so3zkGy5nWWAvvbEnrYzmeSZt1dz3hYRBdx4fZj7Nv-pBgE1UAPVpaTa_cMJEGas3KR1Z1rV6TcvnLaayO7i-6TMPDWItSUizo6XD5bZ6LheB-a-0B60e0NRpdyUKmH-84XvngnKnlPZlBN80oxbnqENjzXvY85kvZ7bwzlPzLhmHrij8lj6gkJ0f72nAZML-8HJm3irpLFlbL9dzDD5YcefDhe4GH2GCPm1H3ZGUeepI_5qTzyEC02Is">
-                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
-                <div class="absolute bottom-xl left-xl right-xl flex justify-between items-end text-white">
-                    <div>
-                        <h4 class="font-headline-lg text-headline-lg">Dijital Ufuklar Sergisi</h4>
-                        <p class="text-body-md opacity-90">İnteraktif Çağdaş Sanat</p>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
+                <!-- i == 0 ise büyük kutu sınıfını ekle -->
+                <div class="relative rounded-3xl overflow-hidden group shadow-lg @(i == 0 ? "bento-item-large" : "")">
+
+                    <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         src="@item.IconUrl" alt="@item.CategoryName">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                    <div class="absolute bottom-0 left-0 p-lg text-white w-full">
+                        <span class="material-symbols-outlined text-[32px] mb-xs block">@item.IconName</span>
+                        <h4 class="font-headline-sm text-headline-sm">@item.CategoryName</h4>
                     </div>
-                    <span class="material-symbols-outlined text-display-sm">arrow_forward</span>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </section>

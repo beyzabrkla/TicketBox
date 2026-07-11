@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.Results;
 using TicketBox.Application.Interfaces;
@@ -21,12 +22,22 @@ namespace TicketBox.Application.Features.Events.Handlers
                                                                                                                           //Eğer etkinlik bulunamazsa bir InvalidOperationException fırlatır.
                                                                                                                          //Eğer etkinlik bulunursa, etkinliğin bilgilerini GetByIdEventQueryResult nesnesine dönüştürür ve geri döndürür.
         {
-            var value = await _context.Events.FindAsync(new object[] { request.Id },cancellationToken);
+            var value = await _context.Events
+                    .Include(e => e.Tickets)
+                    .Include(e => e.Category)
+                    .FirstOrDefaultAsync(x => x.EventId == request.Id, cancellationToken);
+
             if (value == null)
             {
                 throw new Exception("Etkinlik bulunamadı!");
             }
-            return _mapper.Map<GetByIdEventQueryResult>(value); //AutoMapper kullanarak Event nesnesini GetByIdEventQueryResult nesnesine dönüştürür ve geri döndürür.
+
+            var result = _mapper.Map<GetByIdEventQueryResult>(value);
+
+            // Satılan bilet sayısını manuel set ediyoruz
+            result.SoldTicketCount = value.Tickets?.Count ?? 0;
+
+            return result;
         }
     }
 }

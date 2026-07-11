@@ -23,6 +23,8 @@ namespace TicketBox.Application.Features.Categories.Handlers
             }
 
             category.CategoryName = request.CategoryName;
+            category.IconName = request.IconName;
+            category.IconUrl = request.IconUrl;
 
             await _context.SaveChangesAsync(cancellationToken);
 
