@@ -26,7 +26,7 @@ namespace TicketBox.Application.Features.Bookings.Commands.Validators
                   if (existingBooking == null) return false;
 
                   //Etkinliği getir (kapasite bilgisini almak için)
-                  var eventEntity = await _context.Events.FindAsync(new object[] { existingBooking.BookingId },ct);
+                  var eventEntity = await _context.Events.FindAsync(new object[] { existingBooking.EventId },ct);
                   if (eventEntity == null) return false;
 
                   //Specificationı kullanarak diğer rezervasyonları getir

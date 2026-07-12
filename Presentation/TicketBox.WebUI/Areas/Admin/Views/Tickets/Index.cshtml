@@ -1,65 +1,81 @@
-﻿@{
+﻿@model TicketBox.Application.Features.Events.Results.PaginatedEventResult
+
+@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     ViewBag.Title = "Bilet Yönetimi";
 }
 
-<div class="max-w-container-max mx-auto">
-    <!-- Header Section -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-lg mb-xl">
-        <div>
-            <h1 class="font-display-sm text-display-sm text-on-surface tracking-tight">Satılan Biletler</h1>
-            <p class="font-body-md text-body-md text-on-surface-variant mt-1">Platform üzerinden satılan tüm biletleri takip edin ve yönetin.</p>
+<div class="max-w-container-max mx-auto p-lg">
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-lg p-md bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-200">
+            @TempData["Success"]
         </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="mb-lg p-md bg-red-100 text-red-800 rounded-lg border border-red-200">
+            @TempData["Error"]
+        </div>
+    }
+    <h1 class="font-display-sm text-display-sm mb-lg">Bilet Operasyon Merkezi</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+        @foreach (var item in Model.Items)
+        {
+            <div class="bg-white rounded-2xl shadow-ambient border border-outline-variant/30 overflow-hidden">
+                <img src="@item.ImageUrl" alt="@item.Title" class="w-full h-40 object-cover" />
+                <div class="p-lg">
+                    <h2 class="font-title-lg text-on-surface mb-xs">@item.Title</h2>
+                    <p class="text-body-sm text-on-surface-variant mb-md">@item.Location • @item.EventDate.ToShortDateString()</p>
+
+                    <!-- Kapasite Barı -->
+                    <div class="mb-md">
+                        <div class="flex justify-between text-label-sm mb-1">
+                            <span>Doluluk</span>
+                            <span>@item.TicketCount / @item.Capacity</span>
+                        </div>
+                        <div class="w-full bg-surface-container-highest rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: @((double)item.TicketCount / item.Capacity * 100)%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Ekleme Formu -->
+                    <form asp-area="Admin" asp-controller="Tickets" asp-action="AddTickets" method="post" class="flex gap-sm mb-md">
+                        <!-- Hidden input'un doğru gönderildiğinden emin ol -->
+                        <input type="hidden" name="eventId" value="@item.EventId" />
+
+                        <input type="number" name="ticketCount" class="w-full px-md py-2 border border-outline-variant rounded-lg" placeholder="Adet" min="1" required />
+
+                        <button type="submit" class="bg-primary text-white px-md py-2 rounded-lg font-label-md hover:bg-primary-dark transition-colors">
+                            Ekle
+                        </button>
+                    </form>
+
+                    <!-- Satılan Biletleri Gör -->
+                    <a asp-area="Admin" asp-controller="Tickets" asp-action="SoldTickets" asp-route-eventId="@item.EventId"
+                       class="block text-center w-full py-2 border border-primary text-primary rounded-lg font-label-md hover:bg-primary/5">
+                        Satılan Biletleri Gör
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 
-    <!-- Search & Filter Controls -->
-    <div class="bg-white p-lg mb-xl rounded-xl shadow-ambient border border-outline-variant/30 flex flex-col sm:flex-row justify-between items-center gap-md">
-        <div class="relative w-full sm:w-96">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input class="w-full pl-12 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="PNR, etkinlik veya kullanıcı ara..." type="text" />
-        </div>
-        <div class="flex items-center gap-sm">
-            <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[20px]">filter_list</span>
-                Filtrele
-            </button>
-            <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[20px]">download</span>
-                Raporla
-            </button>
-        </div>
-    </div>
+    <!-- Sayfalama -->
+    <div class="mt-xl flex justify-center gap-sm">
+        @{
+            int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+        }
 
-    <!-- Table Section -->
-    <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-surface-container-low border-b border-outline-variant">
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">PNR No</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Etkinlik</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Kullanıcı</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Durum</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-right">İşlem</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-outline-variant/30">
-                <tr class="hover:bg-surface-container-low transition-colors group">
-                    <td class="px-lg py-4 font-mono font-bold text-primary">PNR-88291</td>
-                    <td class="px-lg py-4 font-body-md text-on-surface">Neo-Soul Weekend</td>
-                    <td class="px-lg py-4 font-body-md text-on-surface">Ahmet Yılmaz</td>
-                    <td class="px-lg py-4">
-                        <span class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-emerald-100 text-emerald-800">AKTİF</span>
-                    </td>
-                    <td class="px-lg py-4 text-right">
-                        <button class="text-primary font-label-md hover:underline hover:text-primary-dark transition-all">Detay Görüntüle</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Table Pagination Placeholder -->
-        <div class="px-lg py-4 border-t border-outline-variant/30 bg-surface-container-lowest">
-            <p class="font-label-sm text-label-sm text-on-surface-variant">150 bilet içerisinden 1-10 arası gösteriliyor</p>
-        </div>
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <a asp-action="Index"
+               asp-route-page="@i"
+               class="px-4 py-2 rounded-lg transition-colors @(Model.PageNumber == i ? "bg-primary text-white" : "bg-white border border-outline-variant hover:bg-surface-container")">
+                @i
+            </a>
+        }
     </div>
 </div>

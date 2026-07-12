@@ -1,0 +1,15 @@
+﻿@model TicketBox.Domain.Entities.Booking
+
+<div class="text-center py-20">
+    <h1 class="text-display-md text-primary mb-4">Biletiniz Oluşturuldu!</h1>
+    <p class="text-body-lg text-on-surface-variant mb-12">Detaylar e-posta adresinize gönderildi.</p>
+
+    @foreach (var ticket in Model.Tickets)
+    {
+        <partial name="_TicketCard" model="ticket" />
+    }
+
+    <div class="mt-10">
+        <a href="/User/UserDashboard/MyTickets" class="bg-primary px-8 py-3 rounded-full text-on-primary">Biletlerimi Gör</a>
+    </div>
+</div>

@@ -46,11 +46,11 @@ namespace TicketBox.WebUI.Controllers
                 // Role göre yönlendir
                 if (roles.Contains("Admin"))
                 {
-                    return RedirectToAction("Index", "AdminDashboard", new { area = "Admin" });
+                    return RedirectToAction("Index", "Events", new { area = "Admin" });
                 }
 
                 // Varsayılan olarak User'a veya User area'sına gönder
-                return RedirectToAction("Index", "UserDashboard", new { area = "User" });
+                return RedirectToAction("MyTickets", "UserDashboard", new { area = "User" });
             }
 
             ModelState.AddModelError(string.Empty, "E-posta veya şifre hatalı.");

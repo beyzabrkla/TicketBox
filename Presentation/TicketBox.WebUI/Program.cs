@@ -7,6 +7,7 @@ using TicketBox.Application.Features.Common.Behaviours;
 using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
 using TicketBox.Persistance.Context;
+using TicketBox.Persistance.Services;
 
 internal class Program
 {
@@ -15,14 +16,19 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // AutoMapper kaydı
-        builder.Services.AddAutoMapper(
-            typeof(ApplicationAssemblyReference).Assembly,
-            typeof(Program).Assembly
-        );
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<TicketBox.Application.Mapping.TicketProfile>();
+        }, typeof(ApplicationAssemblyReference).Assembly);
 
         // FluentValidation
-        builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
+        builder.Services.AddValidatorsFromAssembly(
+            typeof(ApplicationAssemblyReference).Assembly,
+            ServiceLifetime.Scoped);
+        
         builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
         // DbContext
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -31,6 +37,9 @@ internal class Program
 
         builder.Services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<TicketContext>());
+
+
+        builder.Services.AddScoped<IEmailService, EmailService>();
 
         // MediatR
         builder.Services.AddMediatR(cfg =>
@@ -81,12 +90,12 @@ internal class Program
         app.MapAreaControllerRoute(
                     name: "AdminArea",
                     areaName: "Admin",
-                    pattern: "Admin/{controller=AdminDashboard}/{action=Index}/{id?}");
+                    pattern: "Admin/{controller=Events}/{action=Index}/{id?}");
 
         app.MapAreaControllerRoute(
             name: "UserArea",
             areaName: "User",
-            pattern: "User/{controller=UserDashboard}/{action=Index}/{id?}");
+            pattern: "User/{controller=UserDashboard}/{action=MyTickets}/{id?}");
 
         app.MapControllerRoute(
             name: "default",

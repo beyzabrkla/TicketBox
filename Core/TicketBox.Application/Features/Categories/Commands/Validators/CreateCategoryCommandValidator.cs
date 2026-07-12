@@ -26,8 +26,7 @@ namespace TicketBox.Application.Features.Categories.Commands.Validators
         private async Task<bool> BeUniqueCategoryName(string categoryName, CancellationToken cancellationToken)
         {
             // bu isimde bir kategori var mı?
-            //      YOKSA           //t tipindeki değişken Category sınıfına çevriliyor ve categoryName özelliğine erişiyoruz
-            return !await _context.Categories.AnyAsync(c => ((Category)(object)c).CategoryName == categoryName, cancellationToken);
+            return !await _context.Categories.AnyAsync(c => c.CategoryName == categoryName, cancellationToken);
         }
     }
 }

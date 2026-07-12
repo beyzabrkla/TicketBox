@@ -6,5 +6,7 @@ namespace TicketBox.Domain.Entities
     {
         public string Name { get; set; }
         public string Surname { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }

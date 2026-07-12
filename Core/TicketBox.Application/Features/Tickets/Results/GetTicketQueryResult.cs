@@ -13,7 +13,7 @@ namespace TicketBox.Application.Features.Tickets.Results
 
         public int EventId { get; set; }
         public Event Event { get; set; }
-
+        public bool IsActive { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string PNR { get; set; }
         public string TicketCode { get; set; }

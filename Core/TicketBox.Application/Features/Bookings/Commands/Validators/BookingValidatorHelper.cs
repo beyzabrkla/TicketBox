@@ -15,7 +15,7 @@ namespace TicketBox.Application.Features.Bookings.Commands.Validators
             if (eventEntity == null) return false;
 
             // Etkinliğin mevcut bilet sayısı Tickets koleksiyonunun sayısı
-            var currentSoldTickets = eventEntity.Tickets?.Count ?? 0;
+            var currentSoldTickets = await _context.Tickets.CountAsync(t => t.EventId == eventId, ct);
 
             // Kapasite kontrolü
             return (currentSoldTickets + requestedCount) <= eventEntity.Capacity;

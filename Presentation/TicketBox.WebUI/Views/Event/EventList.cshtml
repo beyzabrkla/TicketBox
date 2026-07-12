@@ -20,18 +20,20 @@
 <!-- İçerik -->
 <div class="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-12">
 
-    <!-- Filtreler (Checkbox Yapısı) -->
+    <!-- Filtreler -->
     <aside class="w-full lg:w-72 shrink-0">
         <form asp-action="EventList" method="get" class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
             <h3 class="text-xl font-bold mb-6">Filtreler</h3>
 
-            <div class="space-y-3">
+            <input type="hidden" name="search" value="@Context.Request.Query["search"]" />
+
+            <div class="space-y-3 mb-8">
+                <h4 class="font-semibold text-gray-800">Kategoriler</h4>
                 @if (ViewBag.Categories != null)
                 {
                     foreach (var cat in (IEnumerable<TicketBox.Application.Features.Categories.Results.GetCategoryQueryResult>)ViewBag.Categories)
                     {
                         var isChecked = Context.Request.Query["categoryId"] == cat.CategoryId.ToString() ? "checked" : "";
-
                         <label class="flex items-center space-x-3 cursor-pointer">
                             <input type="radio" name="categoryId" value="@cat.CategoryId" @isChecked
                                    class="w-5 h-5 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500" />
@@ -39,20 +41,34 @@
                         </label>
                     }
                 }
-                else
-                {
-                    <p class="text-sm text-gray-400">Kategori bulunamadı.</p>
-                }
-            </div>
-            <div class="mb-8">
-                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4">Fiyat Aralığı: <b id="price-val" class="text-indigo-600">5000</b> TL</span>
-                <input name="maxPrice" type="range" min="0" max="5000" value="5000" oninput="document.getElementById('price-val').innerText = this.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
             </div>
 
-            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700">Uygula</button>
+            <div class="mb-8">
+                @{
+                    // Sayfa yenilendiğinde URL'deki değeri yakala, yoksa varsayılan 5000 olsun
+                    var priceValue = Context.Request.Query["maxPrice"].ToString();
+                    var displayPrice = !string.IsNullOrEmpty(priceValue) ? priceValue : "5000";
+                }
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4">
+                    Fiyat Aralığı: <b id="price-val" class="text-indigo-600">@displayPrice</b> TL
+                </span>
+                <input name="maxPrice" type="range" min="0" max="5000"
+                       value="@displayPrice"
+                       oninput="document.getElementById('price-val').innerText = this.value"
+                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all">Filtrele</button>
+
+            <!-- Filtreleri Temizle Butonu -->
+            <a href="@Url.Action("EventList", "Event")"
+               class="block w-full text-center mt-4 py-2 text-sm text-gray-500 hover:text-indigo-600 hover:underline transition-all">
+                Filtreleri Temizle
+            </a>
         </form>
     </aside>
-        <!-- Etkinlikler Listesi (Grid Yapısı) -->
+    
+    <!-- Etkinlikler Listesi (Grid Yapısı) -->
         <div class="flex-grow">
         <!-- Güncellenmiş Modern Etkinlik Kartları -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -101,21 +117,21 @@
             }
         </div>
             <!-- Sayfalama -->
-            <nav class="flex items-center gap-2 mt-12 justify-center">
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    <a href="@Url.Action("EventList", "Event", new
-                       {
-                           searchTerm = Context.Request.Query["searchTerm"],
-                           categoryId = Context.Request.Query["categoryId"],
-                           maxPrice = Context.Request.Query["maxPrice"],
-                           pageNumber = i
-                       })"
-                       class="@(i == Model.PageNumber ? "bg-indigo-600 text-white" : "border") px-4 py-2 rounded-lg">
-                        @i
-                    </a>
-                }
-            </nav>
+        <nav class="flex items-center gap-2 mt-12 justify-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a href="@Url.Action("EventList", "Event", new
+                   {
+                       search = Context.Request.Query["search"],
+                       categoryId = Context.Request.Query["categoryId"],
+                       maxPrice = Context.Request.Query["maxPrice"],
+                       pageNumber = i
+                   })"
+                   class="@(i == Model.PageNumber ? "bg-indigo-600 text-white" : "border") px-4 py-2 rounded-lg">
+                    @i
+                </a>
+            }
+        </nav>
         </div>
 </div>
 

@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <!-- Hero Section -->
 <section class="relative w-full h-[650px] overflow-hidden">
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('@Model.ImageUrl')"></div>
@@ -33,7 +34,6 @@
         </div>
     </div>
 </section>
-
 <!-- Main Content -->
 <div class="max-w-container-max mx-auto px-lg grid grid-cols-1 lg:grid-cols-12 gap-16 -mt-20 relative z-10">
     <!-- Left Column: Details -->
@@ -98,7 +98,6 @@
             <div class="mt-lg flex justify-between items-end">
                 <div>
                     <p class="font-headline-md text-on-surface">@Model.Location</p>
-                    <p class="text-body-md text-on-surface-variant mt-1">4200 Grand Ave, Los Angeles, CA 90012</p>
                 </div>
                 <button class="text-primary font-label-md flex items-center gap-xs hover:underline transition-all">
                     Haritalarda Aç <span class="material-symbols-outlined text-sm">north_east</span>
@@ -157,7 +156,6 @@
 
                     <div class="flex justify-between font-headline-md text-headline-md text-on-surface pt-sm mt-base border-t border-outline-variant/30">
                         <span>Toplam</span>
-                        @* Burayı da artık modelden gelen değerle toplama yapmak daha sağlıklı *@
                         <span id="total-price">@((Model.Price + Model.ServiceFee).ToString("N0")) TL</span>
                     </div>
                 </div>
@@ -166,7 +164,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <form asp-action="BuyTicket" asp-controller="Event" method="post" id="buy-ticket-form">
-                            <input type="hidden" name="eventId" value="@Model.Id" />
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
                             <input type="hidden" name="ticketCount" id="ticketCountInput" value="1" />
 
                             <button type="submit" class="w-full py-4 bg-primary text-on-primary rounded-lg font-bold text-lg hover:bg-primary-container transition-all shadow-md flex items-center justify-center gap-2">
@@ -190,33 +188,33 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const pricePerTicket = @Model.Price;
-            const serviceFee = 150;
+            //Değişkenler
+            const pricePerTicket = @Model.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+            const serviceFee = @Model.ServiceFee.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             const remainingCapacity = @Model.RemainingCapacity;
-            let count = 1;
+
+            let count = remainingCapacity > 0 ? 1 : 0;
 
             const countSpan = document.getElementById('ticket-count');
             const subTotalSpan = document.getElementById('sub-total');
             const totalPriceSpan = document.getElementById('total-price');
             const ticketCountInput = document.getElementById('ticketCountInput');
+            const plusBtn = document.getElementById('plus-btn');
+            const minusBtn = document.getElementById('minus-btn');
 
-            // Hata kontrolü (ID'ler sayfada yoksa console'da görürsün)
-            if (!countSpan || !document.getElementById('plus-btn')) {
-                console.error("Button veya count span bulunamadı! ID'leri kontrol et.");
-                return;
-            }
-
-            document.getElementById('plus-btn').addEventListener('click', () => {
+            // Sayaç Mantığı
+            plusBtn.addEventListener('click', function() {
                 if (count < remainingCapacity) {
                     count++;
                     updateUI();
                 }
             });
 
-            document.getElementById('minus-btn').addEventListener('click', () => {
+            minusBtn.addEventListener('click', function() {
                 if (count > 1) {
                     count--;
                     updateUI();
@@ -228,8 +226,10 @@
                 if(ticketCountInput) ticketCountInput.value = count;
 
                 const subTotal = count * pricePerTicket;
+                const total = subTotal + serviceFee;
+
                 subTotalSpan.innerText = subTotal.toLocaleString('tr-TR') + ' TL';
-                totalPriceSpan.innerText = (subTotal + serviceFee).toLocaleString('tr-TR') + ' TL';
+                totalPriceSpan.innerText = total.toLocaleString('tr-TR') + ' TL';
             }
         });
     </script>

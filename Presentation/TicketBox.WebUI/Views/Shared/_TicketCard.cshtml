@@ -1,0 +1,62 @@
+﻿@model TicketBox.Domain.Entities.Ticket
+
+<div style="max-width: 700px; margin: 20px auto; border-radius: 15px; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #e5e7eb; background: #fff;">
+
+    <!-- Üst Başlık -->
+    <div style="background-color: #4f46e5; padding: 20px; color: #fff; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">TICKETBOX</h1>
+        <p style="margin: 5px 0 0 0; opacity: 0.8; font-size: 14px;">Etkinlik Giriş Kartı</p>
+    </div>
+
+    <!-- Bilet Gövdesi -->
+    <div style="display: flex; align-items: stretch; border-top: 2px dashed #4f46e5;">
+
+        <!-- Sol: Etkinlik Görseli -->
+        <div style="flex: 1; min-width: 150px; background-color: #f3f4f6;">
+            <img src="@Model.Event.ImageUrl" alt="Etkinlik Görseli" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+
+        <!-- Orta: Detaylı Bilgiler -->
+        <div style="flex: 2; padding: 25px; border-right: 2px dashed #e5e7eb; border-left: 2px dashed #e5e7eb;">
+            <h2 style="margin: 0 0 15px 0; color: #111827; font-size: 20px;">@Model.Event.Title</h2>
+
+            <div style="margin-bottom: 12px;">
+                <span style="display: block; font-size: 10px; color: #6b7280; text-transform: uppercase;">Tarih & Saat</span>
+                <span style="font-weight: 600; color: #374151;">@Model.Event.EventDate?.ToString("dd MMMM yyyy, HH:mm")</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <span style="display: block; font-size: 10px; color: #6b7280; text-transform: uppercase;">Mekan</span>
+                <span style="font-weight: 600; color: #374151;">@Model.Event.Location</span>
+            </div>
+
+            <div style="display: flex; gap: 20px;">
+                <div style="margin-bottom: 12px;">
+                    <span style="display: block; font-size: 10px; color: #6b7280; text-transform: uppercase;">Adet</span>
+                    <span style="font-weight: 600; color: #374151;">@Model.Quantity Kişilik</span>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span style="display: block; font-size: 10px; color: #6b7280; text-transform: uppercase;">Tutar</span>
+                    <span style="font-weight: 600; color: #374151;">@Model.Price.ToString("C2")</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 5px;">
+                <span style="display: block; font-size: 10px; color: #6b7280; text-transform: uppercase;">PNR Kodu</span>
+                <span style="font-size: 18px; font-weight: 800; color: #4f46e5; letter-spacing: 2px;">@Model.PNR</span>
+            </div>
+        </div>
+
+        <!-- Sağ: QR Kod -->
+        <div style="flex: 1; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f9fafb;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@Model.TicketCode"
+                 style="width: 80px; height: 80px; border: 4px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+            <span style="margin-top: 8px; font-size: 9px; color: #9ca3af; word-break: break-all; text-align: center;">@Model.TicketCode</span>
+        </div>
+    </div>
+
+    <!-- Alt Bilgi -->
+    <div style="background-color: #f3f4f6; padding: 10px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
+        Bu bilet dijitaldir, giriş sırasında QR kodu okutmanız yeterlidir.
+    </div>
+</div>

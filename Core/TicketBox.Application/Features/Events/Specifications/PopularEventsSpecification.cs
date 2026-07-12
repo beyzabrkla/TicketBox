@@ -9,8 +9,7 @@ namespace TicketBox.Application.Features.Events.Specifications
         {
             ApplyOrderByDescending(x => x.Tickets.Count(t => t.IsActive));
 
-            AddInclude(x => x.Category);
-            AddInclude(x => x.Tickets);
+            ApplyPaging(0, count); // Burada Take mantığını kur
         }
     }
 }

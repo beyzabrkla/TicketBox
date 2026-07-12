@@ -20,8 +20,6 @@ namespace TicketBox.Application.Features.Events.Specifications
 
             AddInclude(x => x.Category);
             AddInclude(x => x.Tickets);
-
-            ApplyPaging((page - 1) * pageSize, pageSize);
         }
     }
 }

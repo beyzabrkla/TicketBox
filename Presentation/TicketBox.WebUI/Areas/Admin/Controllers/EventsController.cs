@@ -19,9 +19,7 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(string? searchTerm, int? categoryId, bool? isActive,
-            decimal? minPrice, decimal? maxPrice, bool upcoming = false, bool soldOut = false,
-            int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> Index (string? searchTerm, int? categoryId, bool? isActive, decimal? minPrice, decimal? maxPrice, bool upcoming = false, bool soldOut = false, int pageNumber = 1, int pageSize = 5)
         {
             // Filtre alanlarında kullanılacak kategori listesini getiriyoruz.
             ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
@@ -78,6 +76,7 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
                 }
 
                 ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
+                ViewBag.Stats = await _mediator.Send(new GetEventStatsQuery());
 
                 var result = await _mediator.Send(new FilterEventsQuery());
                 model.Events = result.Items;
@@ -135,6 +134,7 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
                 }
 
                 ViewBag.Categories = await _mediator.Send(new GetCategoryQuery());
+                ViewBag.Stats = await _mediator.Send(new GetEventStatsQuery());
 
                 // Mediator'dan dönen result'ın .Items özelliğini atıyoruz.
                 var result = await _mediator.Send(new FilterEventsQuery());

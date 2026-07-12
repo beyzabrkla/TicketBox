@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TicketBox.Application.Features.Users.Queries;
 
 namespace TicketBox.WebUI.Areas.Admin.Controllers
 {
@@ -7,9 +9,17 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        public IActionResult Index()
+        private readonly IMediator _mediator;
+
+        public UsersController(IMediator mediator)
         {
-            return View();
+            _mediator = mediator;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var users = await _mediator.Send(new GetUsersWithTicketsQuery());
+            return View(users);
         }
     }
 }

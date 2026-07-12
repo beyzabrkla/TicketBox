@@ -12,6 +12,9 @@ namespace TicketBox.Application.Features.Bookings.Specifications
 
             // Rezervasyonla ilgili Etkinlik bilgilerini de beraberinde getir
             AddInclude(b => b.Event);
+
+            //son yapılan rezervasyon en başta
+            ApplyOrderByDescending(b => b.BookingDate);
         }
     }
 }

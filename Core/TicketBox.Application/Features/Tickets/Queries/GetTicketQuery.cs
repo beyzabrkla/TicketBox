@@ -7,5 +7,6 @@ namespace TicketBox.Application.Features.Tickets.Queries
                                                                       //IRequest arayüzünü implement ederek, bu sorgunun bir yanıt döndüreceğini belirtir.
                                                                       //Yanıt tipi olarak List<GetTicketQueryResult> kullanılmıştır, yani bu sorgu çalıştırıldığında bir GetTicketQueryResult nesnelerinin listesi dönecektir.
     {
+        public string UserId { get; set; }
     }
 }

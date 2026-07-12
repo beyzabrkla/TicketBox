@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TicketBox.Application.Features.Bookings.Commands;
+using TicketBox.Application.Features.Bookings.Queries;
 using TicketBox.Application.Features.Categories.Queries;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.ViewModels;
@@ -21,7 +22,7 @@ namespace TicketBox.WebUI.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> EventList(string? searchTerm, int? categoryId, int pageNumber = 1, int pageSize = 6)
+        public async Task<IActionResult> EventList(string? search, int? categoryId, decimal? maxPrice, int pageNumber = 1, int pageSize = 6)
         {
             var categoryResult = await _mediator.Send(new GetCategoryQuery());
 
@@ -30,8 +31,9 @@ namespace TicketBox.WebUI.Controllers
             //Query hazırlanması
             var query = new FilterEventsQuery
             {
-                SearchTerm = searchTerm,
+                SearchTerm = search,
                 CategoryId = categoryId,
+                MaxPrice = maxPrice, 
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 IsActive = true,
@@ -70,26 +72,22 @@ namespace TicketBox.WebUI.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> BuyTicket(int eventId, int ticketCount)
+        public async Task<IActionResult> BuyTicket(CreateBookingCommand command)
         {
-            try
-            {
-                var command = new CreateBookingCommand
-                {
-                    EventId = eventId,
-                    TicketCount = ticketCount
-                };
+            // Bilet oluşturulduğunda dönen 'bookingId'yi yakalıyoruz
+            var bookingId = await _mediator.Send(command);
 
-                await _mediator.Send(command);
+            // Artık kullanıcıyı MyTickets'e değil, biletin görüntülendiği Confirmation sayfasına gönderiyoruz
+            return RedirectToAction("Confirmation", "Event", new { bookingId = bookingId });
+        }
 
-                return RedirectToAction("MyTickets", "Profile");
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-
-                return RedirectToAction("EventDetail", "Event", new { id = eventId });
-            }
+        [HttpGet]
+        public async Task<IActionResult> Confirmation(int bookingId)
+        {
+            // Veritabanından o booking'e ait bilgileri ve biletleri çek
+            // Burada daha önce hazırladığın Bilet Tasarımını (HTML) bu view'a model olarak gönder
+            var result = await _mediator.Send(new GetBookingDetailsQuery { Id = bookingId });
+            return View(result);
         }
     }
 }

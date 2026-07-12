@@ -15,13 +15,27 @@ namespace TicketBox.Application.Features.Tickets.Handlers
 
         public async Task<Unit> Handle(RemoveTicketCommand request, CancellationToken cancellationToken)
         {
-            var value = await _context.Tickets.FindAsync(new object[] { request.TicketId },cancellationToken);
+            var ticket = await _context.Tickets.FindAsync(new object[] { request.TicketId }, cancellationToken);
 
-            if (value != null)
+            if (ticket == null)
+                throw new Exception("Bilet bulunamadı.");
+
+            // İptal edilmiş mi zaten diye kontrol
+            if (!ticket.IsActive)
+                throw new Exception("Bilet zaten iptal edilmiş.");
+
+            var eventItem = await _context.Events.FindAsync(new object[] { ticket.EventId }, cancellationToken);
+
+            if (eventItem != null)
             {
-                _context.Tickets.Remove(value);
-                await _context.SaveChangesAsync(cancellationToken);
+                // Kapasiteyi artır
+                eventItem.Capacity += 1;
             }
+
+            //Silmek yerine pasife al
+            ticket.IsActive = false;
+
+            await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

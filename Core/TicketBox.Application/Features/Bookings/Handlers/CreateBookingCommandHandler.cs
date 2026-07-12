@@ -1,87 +1,85 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using TicketBox.Application.Features.Bookings.Commands;
+using TicketBox.Application.Features.Bookings.Events;
 using TicketBox.Application.Interfaces;
 using TicketBox.Domain.Entities;
 
-namespace TicketBox.Application.Features.Bookings.Handlers
+public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, int>
 {
-    public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Unit>
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMemoryCache _cache;
+
+    public CreateBookingCommandHandler(
+        IApplicationDbContext context,
+        IMapper mapper,
+        IMediator mediator,
+        IHttpContextAccessor httpContextAccessor,
+        IMemoryCache cache)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _context = context;
+        _mapper = mapper;
+        _mediator = mediator;
+        _httpContextAccessor = httpContextAccessor;
+        _cache = cache;
+    }
 
-        public CreateBookingCommandHandler(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
+    public async Task<int> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
+    {
+        //Validasyonlar
+        var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                     ?? throw new UnauthorizedAccessException("Giriş yapmalısın!");
+
+        var eventEntity = await _context.Events.FirstOrDefaultAsync(e => e.EventId == request.EventId, cancellationToken)
+                          ?? throw new Exception("Etkinlik bulunamadı.");
+
+        var soldTicketsCount = await _context.Tickets.CountAsync(t => t.EventId == request.EventId, cancellationToken);
+        if (soldTicketsCount + request.TicketCount > eventEntity.Capacity)
+            throw new Exception("Yeterli kontenjan yok!");
+
+        //(Transaction)
+        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        try
         {
-            _httpContextAccessor = httpContextAccessor;
-            _context = context;
-        }
-
-        public async Task<Unit> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
-        {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-                throw new UnauthorizedAccessException("Kullanıcı girişi bulunamadı!");
-
-            //Etkinliği ve fiyatını çek
-            var eventEntity = await _context.Events
-                .FirstOrDefaultAsync(e => e.EventId == request.EventId, cancellationToken);
-
-            if (eventEntity == null || !eventEntity.IsActive)
-                throw new Exception("Etkinlik bulunamadı veya pasif durumda!");
-
-            //Kapasite kontrolü
-            var soldTicketsCount = await _context.Tickets
-                .Where(t => t.EventId == request.EventId)
-                .SumAsync(t => t.Quantity, cancellationToken);
-
-            if (soldTicketsCount + request.TicketCount > eventEntity.Capacity)
-                throw new Exception("Yeterli kontenjan bulunmamaktadır!");
-
-            // Fiyatı heesapla
-            decimal unitPrice = eventEntity.Price ?? 0;
-
-            decimal serviceFee = 150; // Bu değeri bir konfigürasyondan da çekebilirsin
-            decimal totalAmount = (unitPrice * request.TicketCount) + serviceFee;
-            
-            // Rezervasyonu oluştur (Tarihi sistemden al)
-            var booking = new Booking
-            {
-                AppUserId = userId,
-                BookingDate = DateTime.UtcNow,
-                TotalAmount = totalAmount,
-                ServiceFee = serviceFee,
-                EventId = request.EventId,
-                Tickets = new List<Ticket>()
-            };
-
             // Biletleri oluştur
-            for (int i = 0; i < request.TicketCount; i++)
-            {
-                var ticket = new Ticket
-                {
-                    Booking = booking,
-                    EventId = request.EventId,
-                    AppUserId = userId,
-                    Price = unitPrice, // Bilet başına gerçek fiyat
-                    PurchaseDate = DateTime.UtcNow,
-                    PNR = Guid.NewGuid().ToString()[..6].ToUpper(),
-                    TicketCode = $"TCK-2026-{Guid.NewGuid().ToString()[..6].ToUpper()}",
-                    IsActive = true,
-                    IsUsed = false,
-                    Quantity = 1
-                };
+            var booking = _mapper.Map<Booking>(request);
+            booking.AppUserId = userId;
+            booking.BookingDate = DateTime.UtcNow;
+            booking.ServiceFee = 150;
+            booking.TotalAmount = ((eventEntity.Price ?? 0) * request.TicketCount) + booking.ServiceFee;
 
-                booking.Tickets.Add(ticket);
-            }
+            int lastTicketCount = await _context.Tickets.CountAsync(cancellationToken);
+            booking.AddTickets(request.TicketCount, request.EventId, userId, eventEntity.Price ?? 0, lastTicketCount);
+
+            // Kapasiteyi düşür
+            eventEntity.Capacity -= request.TicketCount;
+            _context.Events.Update(eventEntity);
 
             await _context.Bookings.AddAsync(booking, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            await transaction.CommitAsync(cancellationToken);
+
+            // Cache'i temizle! 
+            // "EventDetail_" ön eki, GetByIdEventQueryHandler içerisinde cache'i oluştururken kullandığın anahtarla AYNI olmalı.
+            _cache.Remove($"EventDetail_{request.EventId}");
+
+            //Başarılı olduktan sonra maili tetikle
+            await _mediator.Publish(new BookingCreatedEvent(booking, eventEntity.Title, userId), cancellationToken);
+
+            return booking.BookingId;
+        }
+        catch
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
         }
     }
 }

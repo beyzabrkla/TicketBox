@@ -13,6 +13,7 @@
         public Booking Booking { get; set; }
 
         public string AppUserId { get; set; }
+        public ApplicationUser AppUser { get; set; }
         public DateTime PurchaseDate { get; set; }
         public int Quantity { get; set; }
         public bool IsActive { get; set; } //Bilet iptal edildi mi?
