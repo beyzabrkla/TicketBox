@@ -33,51 +33,53 @@ public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand,
 
     public async Task<int> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
     {
-        //Validasyonlar
+        // Kullanıcı kimlik doğrulamasını kontrol et
         var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? throw new UnauthorizedAccessException("Giriş yapmalısın!");
 
+        // İlgili etkinlik sistemde var mı
         var eventEntity = await _context.Events.FirstOrDefaultAsync(e => e.EventId == request.EventId, cancellationToken)
                           ?? throw new Exception("Etkinlik bulunamadı.");
 
+        // Seçilen bilet adediyle toplam kapasiteyi kontrol et
         var soldTicketsCount = await _context.Tickets.CountAsync(t => t.EventId == request.EventId, cancellationToken);
         if (soldTicketsCount + request.TicketCount > eventEntity.Capacity)
             throw new Exception("Yeterli kontenjan yok!");
 
-        //(Transaction)
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            // Biletleri oluştur
+            // Rezervasyon nesnesini oluştur ve temel bilgileri ata
             var booking = _mapper.Map<Booking>(request);
             booking.AppUserId = userId;
             booking.BookingDate = DateTime.UtcNow;
-            booking.ServiceFee = 150;
-            booking.TotalAmount = ((eventEntity.Price ?? 0) * request.TicketCount) + booking.ServiceFee;
+            booking.ServiceFee = 150; // hizmet bedeli
 
+            // Toplam tutarı ve bilet sayısını Booking üzerinden hesapla
+            booking.TicketCount = request.TicketCount;
+            booking.TotalAmount = (eventEntity.Price ?? 0) * request.TicketCount + booking.ServiceFee; //toplam ücret
+
+            // Biletleri Booking sınıfındaki metot ile üret
             int lastTicketCount = await _context.Tickets.CountAsync(cancellationToken);
             booking.AddTickets(request.TicketCount, request.EventId, userId, eventEntity.Price ?? 0, lastTicketCount);
 
-            // Kapasiteyi düşür
-            eventEntity.Capacity -= request.TicketCount;
-            _context.Events.Update(eventEntity);
-
+            // Rezervasyonu kaydet
             await _context.Bookings.AddAsync(booking, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
 
-            // Cache'i temizle! 
-            // "EventDetail_" ön eki, GetByIdEventQueryHandler içerisinde cache'i oluştururken kullandığın anahtarla AYNI olmalı.
+            // Güncel etkinlik bilgisini yansıtmak için cache'i temizle
             _cache.Remove($"EventDetail_{request.EventId}");
 
-            //Başarılı olduktan sonra maili tetikle
+            // Rezervasyon başarıyla tamamlandığında bilgilendirme mailini tetikle
             await _mediator.Publish(new BookingCreatedEvent(booking, eventEntity.Title, userId), cancellationToken);
 
             return booking.BookingId;
         }
         catch
         {
+            // Hata durumunda tüm değişiklikleri geri al
             await transaction.RollbackAsync(cancellationToken);
             throw;
         }

@@ -1,9 +1,9 @@
 ﻿<section class="py-3xl bg-surface-container-low/30 my-16">
     <div class="max-w-container-max mx-auto px-lg">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            
-            <!-- Sol Taraf-->
-            <div class="bg-[#4F46E5] rounded-[2rem] p-10 shadow-xl shadow-indigo-200 relative overflow-hidden text-white flex flex-col justify-between">
+
+            <!-- Sol Taraf -->
+            <div class="bg-[#4F46E5] rounded-[2rem] p-10 shadow-xl shadow-indigo-200 relative overflow-hidden text-white flex flex-col justify-between h-full">
                 <div class="relative z-10">
                     <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-xs font-bold tracking-wider uppercase mb-md">Yapay Zeka</span>
                     <h2 class="text-4xl font-bold mb-sm leading-tight">Yapay Zeka Destekli<br>Deneyim</h2>
@@ -15,43 +15,42 @@
                 </div>
             </div>
 
-            <!-- Sağ Taraf -->
-            <div class="flex flex-col gap-6">
-                <!-- Mood-Based -->
-                <div class="bg-white p-lg rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 flex items-center justify-between group">
-                    <div class="flex items-center gap-md">
-                        <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+            <!-- Sağ Taraf: Artık daha dolu ve entegre -->
+            <div class="flex flex-col h-full gap-6">
+                <div class="bg-white p-lg rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+
+                    <!-- Başlık ve Tanım -->
+                    <div class="flex items-center gap-md mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0">
                             <span class="material-symbols-outlined text-[32px]">mood</span>
                         </div>
                         <div>
                             <h3 class="font-bold text-slate-800 text-lg">Mood-Based Chatbot</h3>
-                            <p class="text-slate-500 text-sm">Ruh haline uygun etkinlikleri anlık keşfet.</p>
+                            <p class="text-slate-500 text-sm">Yapay zeka destekli akıllı etkinlik asistanı.</p>
                         </div>
                     </div>
-                    <button class="px-6 py-3 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-rose-500 transition-colors">
-                        Sohbet
-                    </button>
-                </div>
 
-                <!-- Tabili AI -->
-                <div class="bg-white p-lg rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="flex items-center gap-md mb-md">
-                        <div class="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-600">
-                            <span class="material-symbols-outlined text-[32px]">analytics</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-lg">Tabili AI Analytics</h3>
-                            <p class="text-slate-500 text-sm">Veri setlerini sorgula, derin içgörüler al.</p>
-                        </div>
+                    <!-- Kartı dolduracak yeni içerik -->
+                    <div class="space-y-4 mb-8 flex-grow">
+                        <p class="text-slate-600 leading-relaxed">
+                            Sadece birkaç kelimeyle o anki modunu tanımla; sistemimiz senin için en uygun konser, tiyatro veya workshop etkinliklerini saniyeler içinde analiz etsin.
+                        </p>
+                        <ul class="text-sm text-slate-500 space-y-2">
+                            <li class="flex items-center gap-2"><span class="text-rose-500">✔</span> Hızlı ve kişiselleştirilmiş öneriler.</li>
+                            <li class="flex items-center gap-2"><span class="text-rose-500">✔</span> Gerçek zamanlı veri analitiği.</li>
+                            <li class="flex items-center gap-2"><span class="text-rose-500">✔</span> Moduna göre akıllı filtreleme.</li>
+                        </ul>
                     </div>
-                    <div class="bg-slate-900 rounded-xl p-md font-mono text-xs text-cyan-400 mb-md overflow-x-auto">
-                        > SELECT * FROM insights WHERE user_mood = 'energetic'
-                    </div>
-                    <button class="w-full py-3 rounded-xl bg-cyan-600 text-white font-semibold hover:bg-cyan-700 transition-all">
-                        Analiz Ekranına Git
-                    </button>
-                </div>
 
+                    <!-- Form Kısmı (En altta ve tam genişlik) -->
+                    <form asp-controller="Chat" asp-action="ProcessMood" method="post" class="mt-auto flex flex-col gap-3">
+                        <input type="text" name="userMood" placeholder="Örn: Bugün melankoliğim, sakin bir caz konseri arıyorum..."
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-rose-500 transition-all" required />
+                        <button type="submit" class="w-full px-8 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-rose-500 transition-all shadow-md">
+                            Öneri Oluştur
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

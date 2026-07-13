@@ -99,7 +99,7 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(EventListViewModel model) // EventListViewModel alıyoruz
+        public async Task<IActionResult> Update(EventListViewModel model)
         {
             var command = model.CreateEventCommand;
             // Formdaki hidden input'tan gelen EventId'yi alıyoruz

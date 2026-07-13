@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using TicketBox.Application.Features.Tickets.Commands;
 using TicketBox.Application.Interfaces;
 
@@ -21,14 +19,16 @@ namespace TicketBox.Application.Features.Tickets.Handlers
 
         public async Task<Unit> Handle(AdminAddTicketCommand request, CancellationToken cancellationToken)
         {
-            // Etkinliği bul
+            var user = _httpContextAccessor.HttpContext?.User;
+            if (user == null || !user.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("Yetkisiz işlem!");
+
             var eventEntity = await _context.Events.FindAsync(new object[] { request.EventId }, cancellationToken);
 
             if (eventEntity == null)
                 throw new Exception("Etkinlik bulunamadı.");
 
-            // Sadece kapasiteyi artır
-            eventEntity.Capacity += request.TicketCount;
+            eventEntity.Capacity += request.TicketCount; //kapasite arttırma
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;

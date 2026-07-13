@@ -46,7 +46,7 @@ namespace TicketBox.WebUI.Controllers
                 // Role göre yönlendir
                 if (roles.Contains("Admin"))
                 {
-                    return RedirectToAction("Index", "Events", new { area = "Admin" });
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
 
                 // Varsayılan olarak User'a veya User area'sına gönder

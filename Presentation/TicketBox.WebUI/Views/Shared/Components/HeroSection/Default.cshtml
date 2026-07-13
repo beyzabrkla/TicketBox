@@ -10,20 +10,15 @@
         <h1 class="font-display-lg text-display-lg text-white mb-lg max-w-4xl mx-auto drop-shadow-2xl">
             Bir sonraki <span class="text-primary-fixed italic">unutulmaz</span> deneyimini bul
         </h1>
-        <div class="mt-xl max-w-2xl mx-auto glass-card p-2 rounded-full shadow-2xl flex items-center gap-sm border border-white/25">
-            <div class="flex-1 flex items-center pl-md gap-sm">
-                <span class="material-symbols-outlined text-white/70">search</span>
-                <input class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-white placeholder:text-white/60 py-md" placeholder="Konser, spor, tiyatro ara..." type="text">
-            </div>
-            <button class="bg-primary text-on-primary px-xl py-md rounded-full font-label-md text-label-md shadow-lg hover:shadow-primary/20 hover:bg-primary-container transition-all active:scale-95">
-                Keşfet
-            </button>
-        </div>
-        <div class="mt-xl flex flex-wrap justify-center gap-md">
-            <span class="font-label-sm text-label-sm text-white/80 uppercase tracking-widest block w-full mb-xs">Trend olanlar:</span>
-            <button class="px-md py-xs rounded-full border border-white/20 text-label-md bg-white/10 text-white hover:bg-white/20 transition-all backdrop-blur-md">Jazz Geceleri</button>
-            <button class="px-md py-xs rounded-full border border-white/20 text-label-md bg-white/10 text-white hover:bg-white/20 transition-all backdrop-blur-md">Dijital Sanat 2024</button>
-            <button class="px-md py-xs rounded-full border border-white/20 text-label-md bg-white/10 text-white hover:bg-white/20 transition-all backdrop-blur-md">Teknoloji Zirveleri</button>
-        </div>
-    </div>
-</section>
+
+        <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 drop-shadow-md">
+            Yüzlerce konser, tiyatro ve spor etkinliği arasından sana en uygun olanı keşfet.
+            Hayatına değer katacak anları yakalamak için hemen başla.
+        </p>
+
+        <a href="@Url.Action("EventList", "Event")"
+           class="inline-flex items-center gap-2 bg-primary text-on-primary px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-primary-container hover:scale-105 transition-all duration-300">
+            <span class="material-symbols-outlined">explore</span>
+            Tüm Etkinlikleri Gör
+        </a>
+    </div></section>

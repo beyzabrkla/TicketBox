@@ -1,0 +1,133 @@
+﻿@model TicketBox.WebUI.Areas.Admin.Models.DashboardViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Tekrar Hoş Geldiniz";
+}
+
+<div class="max-w-container-max mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-md">
+        <div>
+            <h1 class="font-display-sm text-display-sm text-on-surface">Sistem Genel Bakış</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Gerçek zamanlı performans metrikleri ve lojistik durumu.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
+        <div class="col-span-1 md:col-span-2 glass-card rounded-xl p-lg flex flex-col justify-between stat-card-hover transition-all relative overflow-hidden group">
+            <div class="relative z-10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-md text-label-md text-on-surface-variant">Toplam Brüt Satış</p>
+                        <h2 class="font-display-lg text-display-lg text-primary mt-xs">@Model.TotalGrossSales.ToString("C2")</h2>
+                    </div>
+                    <span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-xs rounded-full text-[12px] font-bold">+12.4%</span>
+                </div>
+                <div class="mt-xl h-24 w-full bg-primary/5 rounded-lg border border-primary/10 flex items-end px-md pb-xs gap-xs">
+                    @for (int i = 0; i < 7; i++) { <div class="flex-1 bg-primary h-[60%] rounded-t-sm"></div> }
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-lg flex flex-col justify-between stat-card-hover transition-all">
+            <div>
+                <span class="material-symbols-outlined text-secondary bg-secondary/10 p-sm rounded-lg mb-md">event</span>
+                <p class="font-label-md text-label-md text-on-surface-variant">Aktif Etkinlikler</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface">@Model.ActiveEventsCount.ToString("N0")</h3>  
+            </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-lg flex flex-col justify-between stat-card-hover transition-all">
+            <div>
+                <span class="material-symbols-outlined text-tertiary bg-tertiary/10 p-sm rounded-lg mb-md">group</span>
+                <p class="font-label-md text-label-md text-on-surface-variant">Yeni Kullanıcılar</p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface">@Model.NewUsersCount.ToString("N0")</h3>
+            </div>
+            <p class="text-label-sm text-on-surface-variant mt-md">Bugün sisteme katılan kullanıcılar</p>
+        </div>
+    </div>
+
+   <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <div class="lg:col-span-2 glass-card rounded-xl overflow-hidden border border-outline-variant">
+            <div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                <h3 class="font-headline-md text-headline-md text-on-surface">Son İşlem Kayıtları</h3>
+            </div>
+            <div class="p-0">
+                <table class="w-full text-left">
+                    <thead class="bg-surface-container-lowest text-on-surface-variant text-label-sm">
+                        <tr>
+                            <th class="px-lg py-md">KULLANICI / İŞLEM</th>
+                            <th class="px-lg py-md">ETKİNLİK ID</th>
+                            <th class="px-lg py-md">DURUM</th>
+                            <th class="px-lg py-md">ZAMAN</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                        @foreach (var item in Model.RecentTransactions)
+                        {
+                            <tr class="hover:bg-surface-container transition-colors">
+                                <td class="px-lg py-md">
+                                    <div class="flex items-center gap-sm">
+                                        <div class="w-8 h-8 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center text-[10px] font-bold">
+                                            @(!string.IsNullOrEmpty(item.UserName) ? item.UserName.Substring(0, 1).ToUpper() : "?")
+                                        </div>
+                                        <div>
+                                            <p class="font-label-md text-on-surface">@item.UserName</p>
+                                            <p class="text-label-sm text-on-surface-variant">@item.ActivityName</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-lg py-md font-mono text-label-sm">#@item.EventId</td>
+                                <td class="px-lg py-md">
+                                    <span class="bg-emerald-100 text-emerald-800 px-sm py-xs rounded-full text-[11px] font-bold uppercase tracking-wider">@item.Status</span>
+                                </td>
+                                <td class="px-lg py-md text-label-sm text-on-surface-variant">@item.Time.ToString("HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analiz Kartı İçeriği (Güncellenmiş) -->
+        <div class="p-lg">
+            <div class="flex items-center gap-xs mb-sm">
+                <span class="material-symbols-outlined text-primary text-md">psychology</span>
+                <span class="text-primary font-bold text-[11px] uppercase tracking-widest">Tavily AI Analiz Modülü</span>
+            </div>
+            <h4 class="font-title-lg text-title-lg text-on-surface mb-md">@Model.AiInsightTitle</h4>
+
+            <!-- Sorgulama Alanı -->
+            <div class="mb-lg">
+                <input type="text" id="aiQuestion" placeholder="Örn: Hangi kategoride satışları artırabilirim?"
+                       class="w-full p-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-sm mb-sm">
+                <button onclick="askAi()" class="w-full bg-primary text-on-primary py-sm rounded-lg font-bold text-label-md hover:opacity-90 transition-all">
+                    Sorgula
+                </button>
+            </div>
+
+            <p id="aiResponse" class="text-body-md text-on-surface-variant leading-relaxed min-h-[100px]">
+                @Model.AiInsightDescription
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function askAi() {
+        const question = document.getElementById('aiQuestion').value;
+        const responseDiv = document.getElementById('aiResponse');
+        if(!question) return;
+
+        responseDiv.innerText = "Tavily verileri analiz ediyor...";
+
+        const response = await fetch('@Url.Action("AskAi", "Dashboard")', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'userQuestion=' + encodeURIComponent(question)
+        });
+
+        const data = await response.json();
+        responseDiv.innerText = data.answer;
+    }
+</script>

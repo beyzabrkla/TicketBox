@@ -18,70 +18,37 @@
         </a>
     </div>
 
-    <!-- Search & Filter Controls -->
-    <div class="bg-white p-lg mb-xl rounded-xl shadow-ambient border border-outline-variant/30 flex flex-col sm:flex-row justify-between items-center gap-md">
-        <div class="relative w-full sm:w-96">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input class="w-full pl-12 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                   placeholder="PNR veya kullanıcı ara..." type="text" />
-        </div>
-        <div class="flex items-center gap-sm">
-            <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[20px]">filter_list</span>
-                Filtrele
-            </button>
-            <button class="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[20px]">download</span>
-                Raporla
-            </button>
-        </div>
-    </div>
-
     <!-- Table Section -->
     <div class="bg-white rounded-xl shadow-ambient border border-outline-variant/30 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-surface-container-low border-b border-outline-variant">
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">PNR No</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Kullanıcı</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Satış Tarihi</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Durum</th>
-                    <th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-right">İşlem</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">İsim Soyisim</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">E-posta</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">PNR</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">Bilet Kodu</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">Ödenen Tutar</th>
+                    <th class="px-lg py-4 font-label-md text-on-surface-variant">Etkinlik</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant/30">
-                @if (Model != null && Model.Any())
+                @foreach (var ticket in Model)
                 {
-                    @foreach (var ticket in Model)
-                    {
-                        <tr class="hover:bg-surface-container-low transition-colors group">
-                            <!-- Senin modelinde PNR özelliği var -->
-                            <td class="px-lg py-4 font-mono font-bold text-primary">@ticket.PNR</td>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <!-- Mapping profilinde UserName alanına ad-soyadı maplediğimiz için artık böyle kullanabilirsin -->
+                        <td class="px-lg py-4 font-body-md text-on-surface">@ticket.UserName</td>
 
-                            <td class="px-lg py-4 font-body-md text-on-surface">@ticket.AppUserId</td>
+                        <!-- E-posta için AppUser'ın UserName'ine gitmemiz lazım -->
+                        <td class="px-lg py-4 font-body-md text-on-surface">@ticket.Booking?.AppUser?.UserName</td>
 
-                            <td class="px-lg py-4 font-body-md text-on-surface-variant">@ticket.PurchaseDate.ToShortDateString()</td>
-
-                            <td class="px-lg py-4">
-                                <span class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-emerald-100 text-emerald-800">AKTİF</span>
-                            </td>
-
-                            <td class="px-lg py-4 text-right">
-                                <a asp-action="Details" asp-route-id="@ticket.TicketId" class="text-primary font-label-md hover:underline hover:text-primary-dark transition-all">Detay Görüntüle</a>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="5" class="px-lg py-8 text-center text-on-surface-variant">Bu etkinlik için henüz bilet satışı bulunmamaktadır.</td>
+                        <td class="px-lg py-4 font-mono font-bold text-primary">@ticket.PNR</td>
+                        <td class="px-lg py-4 font-mono text-on-surface-variant">@ticket.TicketCode</td>
+                        <td class="px-lg py-4 font-body-md text-on-surface">@ticket.Price.ToString("C2")</td>
+                        <td class="px-lg py-4 font-body-md text-on-surface">@ticket.Event?.Title</td>
                     </tr>
                 }
             </tbody>
-        </table>
-
-        <!-- Table Pagination Placeholder -->
+        </table>       
         <div class="px-lg py-4 border-t border-outline-variant/30 bg-surface-container-lowest">
             <p class="font-label-sm text-label-sm text-on-surface-variant">@Model?.Count() bilet gösteriliyor</p>
         </div>

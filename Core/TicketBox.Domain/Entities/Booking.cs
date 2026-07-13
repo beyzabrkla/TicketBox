@@ -3,19 +3,28 @@
     public class Booking
     {
         public int BookingId { get; set; }
+
+        public ApplicationUser AppUser { get; set; }
         public string AppUserId { get; set; }
+
         public DateTime BookingDate { get; set; }
+
         public decimal TotalAmount { get; set; }
-        public decimal ServiceFee { get; set; } 
+
+        public decimal ServiceFee { get; set; }
+
+        public int TicketCount { get; set; } 
+
         public int EventId { get; set; }
         public Event Event { get; set; }
+
         public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-        // Bilet ekleme işi artık Booking sınıfının sorumluluğunda
         public void AddTickets(int count, int eventId, string userId, decimal unitPrice, int lastTicketCount)
         {
             for (int i = 0; i < count; i++)
             {
+                //bilet oluşturma
                 this.Tickets.Add(new Ticket
                 {
                     Booking = this, 

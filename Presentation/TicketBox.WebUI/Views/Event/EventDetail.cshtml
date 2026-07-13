@@ -166,10 +166,11 @@
                         <form asp-action="BuyTicket" asp-controller="Event" method="post" id="buy-ticket-form">
                             <input type="hidden" name="eventId" value="@Model.EventId" />
                             <input type="hidden" name="ticketCount" id="ticketCountInput" value="1" />
-
-                            <button type="submit" class="w-full py-4 bg-primary text-on-primary rounded-lg font-bold text-lg hover:bg-primary-container transition-all shadow-md flex items-center justify-center gap-2">
+                            <button type="submit"
+                                    class="w-full py-4 @(Model.RemainingCapacity > 0 ? "bg-primary" : "bg-surface-container-high cursor-not-allowed") text-on-primary rounded-lg font-bold text-lg transition-all shadow-md flex items-center justify-center gap-2"
+                                @(Model.RemainingCapacity > 0 ? "" : "disabled")>
                                 <span class="material-symbols-outlined">confirmation_number</span>
-                                Bilet Al
+                                @(Model.RemainingCapacity > 0 ? "Bilet Al" : "Tükendi")
                             </button>
                         </form>
                     }
@@ -192,11 +193,11 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            //Değişkenler
-            const pricePerTicket = @Model.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-            const serviceFee = @Model.ServiceFee.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-            const remainingCapacity = @Model.RemainingCapacity;
+            const pricePerTicket = parseFloat(@Model.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+            const serviceFee = parseFloat(@Model.ServiceFee.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+            const remainingCapacity = parseInt(@Model.RemainingCapacity);
 
+            // Eğer kapasite yoksa sayaç 0, varsa 1'den başlasın
             let count = remainingCapacity > 0 ? 1 : 0;
 
             const countSpan = document.getElementById('ticket-count');
@@ -205,6 +206,12 @@
             const ticketCountInput = document.getElementById('ticketCountInput');
             const plusBtn = document.getElementById('plus-btn');
             const minusBtn = document.getElementById('minus-btn');
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            // Sayfa yüklendiğinde durumu kontrol et
+            if (remainingCapacity <= 0) {
+                updateUI(); //butonu pasif duruma getir
+            }
 
             // Sayaç Mantığı
             plusBtn.addEventListener('click', function() {
@@ -228,8 +235,18 @@
                 const subTotal = count * pricePerTicket;
                 const total = subTotal + serviceFee;
 
-                subTotalSpan.innerText = subTotal.toLocaleString('tr-TR') + ' TL';
-                totalPriceSpan.innerText = total.toLocaleString('tr-TR') + ' TL';
+                subTotalSpan.innerText = subTotal.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
+                totalPriceSpan.innerText = total.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
+
+                // Kapasite dolduysa veya bilet kalmadıysa butonu devre dışı bırak
+                if (remainingCapacity <= 0) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-surface-container-high', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-primary', 'hover:bg-primary-container');
+                    submitBtn.innerText = "Tükendi";
+                    plusBtn.disabled = true;
+                    minusBtn.disabled = true;
+                }
             }
         });
     </script>

@@ -7,11 +7,7 @@ namespace TicketBox.Application.Features.Users.Specifications
     {
         public GetUsersWithTicketsSpecification()
         {
-            //hem biletleri olanları filtrele 
-            AddCriteria(u => u.Tickets.Any());
- 
-            //hem de bilet verilerini yükle
-            AddInclude(u => u.Tickets);
+            AddInclude(u => u.Tickets.Where(t => t.IsActive == true));
         }
     }
 }

@@ -64,7 +64,7 @@ namespace TicketBox.WebUI.Controllers
 
             if (result == null)
             {
-                return NotFound(); // 404 hatası döner
+                return NotFound();
             }
 
             return View(result);
@@ -72,12 +72,11 @@ namespace TicketBox.WebUI.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> BuyTicket(CreateBookingCommand command)
         {
-            // Bilet oluşturulduğunda dönen 'bookingId'yi yakalıyoruz
+            // Bilet oluşturulduğunda dönen idyi yakalıyoruz
             var bookingId = await _mediator.Send(command);
-
-            // Artık kullanıcıyı MyTickets'e değil, biletin görüntülendiği Confirmation sayfasına gönderiyoruz
             return RedirectToAction("Confirmation", "Event", new { bookingId = bookingId });
         }
 
@@ -85,7 +84,6 @@ namespace TicketBox.WebUI.Controllers
         public async Task<IActionResult> Confirmation(int bookingId)
         {
             // Veritabanından o booking'e ait bilgileri ve biletleri çek
-            // Burada daha önce hazırladığın Bilet Tasarımını (HTML) bu view'a model olarak gönder
             var result = await _mediator.Send(new GetBookingDetailsQuery { Id = bookingId });
             return View(result);
         }

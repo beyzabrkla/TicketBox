@@ -14,8 +14,7 @@ namespace TicketBox.Persistance.Services
 {
     public class RazorViewToStringRenderer : IRazorViewToStringRenderer
     {
-        private readonly IServiceScopeFactory _scopeFactory; // Değişiklik burada
-
+        private readonly IServiceScopeFactory _scopeFactory;
         public RazorViewToStringRenderer(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;

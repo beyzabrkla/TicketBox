@@ -15,8 +15,7 @@ namespace TicketBox.Persistance.Specifications
                 query = query.Where(spec.Criteria);
             }
 
-            // İlişkili verileri yükle (Includes)
-            // ÖNCE include etmeliyiz ki Skip/Take veriyi kısıtlamadan önce ilişkiler hazır olsun
+            // İlişkili verileri yükle
             if (spec.Includes != null)
             {
                 query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));

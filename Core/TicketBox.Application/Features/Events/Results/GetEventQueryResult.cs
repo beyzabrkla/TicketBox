@@ -14,5 +14,6 @@
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int TicketCount { get; set; }
+        public double OccupancyRate => Capacity > 0 ? (double)TicketCount / Capacity * 100 : 0;
     }
 }

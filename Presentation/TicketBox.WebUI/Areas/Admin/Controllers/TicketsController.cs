@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketBox.Application.Features.Events.Queries;
-using TicketBox.Application.Features.Events.Results;
 using TicketBox.Application.Features.Tickets.Commands;
+using TicketBox.Application.Features.Tickets.Queries;
 
 namespace TicketBox.WebUI.Areas.Admin.Controllers
 {
@@ -54,9 +54,8 @@ namespace TicketBox.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> SoldTickets(int eventId)
         {
-            // Burası, o etkinliğe ait bilet listesini çeken servisi tetikleyecek yer.
-            // Şimdilik view'ı döndürsün, içini daha sonra dolduralım.
-            return View();
+            var values = await _mediator.Send(new GetTicketsByEventIdQuery { EventId = eventId });
+            return View(values);
         }
     }
 }

@@ -21,7 +21,6 @@ namespace TicketBox.Application.Mapping
                 .ForMember(dest => dest.IsFastSelling, opt => opt.MapFrom(src => src.Tickets.Count(t => t.IsActive) >= (src.Capacity * 0.8)));
             CreateMap<CreateEventCommand, Event>();
 
-            //EventId eşleşmesini korumak için ignore
             CreateMap<UpdateEventCommand, Event>()
                 .ForMember(dest => dest.EventId, opt => opt.Ignore());
         }

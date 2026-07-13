@@ -38,6 +38,7 @@ internal class Program
         builder.Services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<TicketContext>());
 
+        builder.Services.AddHttpClient<IAiService, AiService>();
 
         builder.Services.AddScoped<IEmailService, EmailService>();
 
@@ -90,7 +91,7 @@ internal class Program
         app.MapAreaControllerRoute(
                     name: "AdminArea",
                     areaName: "Admin",
-                    pattern: "Admin/{controller=Events}/{action=Index}/{id?}");
+                    pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
 
         app.MapAreaControllerRoute(
             name: "UserArea",

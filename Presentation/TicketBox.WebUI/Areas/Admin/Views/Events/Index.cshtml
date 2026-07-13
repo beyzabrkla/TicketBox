@@ -149,26 +149,22 @@
                     </tr>
                 </thead>
 
+                <!-- TABLO GÖVDESİ -->
                 <tbody class="divide-y divide-outline-variant/30">
                     @foreach (var item in Model.Events)
                     {
+                        // Doluluk oranı hesaplama
+                        var occupancyRate = item.Capacity > 0 ? (double)item.TicketCount / item.Capacity * 100 : 0;
+
                         <tr class="hover:bg-surface-container-low transition-colors group">
 
                             <!-- Etkinlik -->
                             <td class="px-lg py-4">
                                 <div class="flex items-center gap-md">
-                                    <img src="@item.ImageUrl"
-                                         class="w-14 h-14 rounded-xl object-cover border border-outline-variant"
-                                         alt="@item.Title" />
-
+                                    <img src="@item.ImageUrl" class="w-14 h-14 rounded-xl object-cover border border-outline-variant" alt="@item.Title" />
                                     <div>
-                                        <p class="font-label-md text-on-surface">
-                                            @item.Title
-                                        </p>
-
-                                        <p class="text-xs text-on-surface-variant line-clamp-2">
-                                            @item.Description
-                                        </p>
+                                        <p class="font-label-md text-on-surface">@item.Title</p>
+                                        <p class="text-xs text-on-surface-variant line-clamp-2">@item.Description</p>
                                     </div>
                                 </div>
                             </td>
@@ -181,76 +177,55 @@
                             </td>
 
                             <!-- Tarih -->
-                            <td class="px-lg py-4">
-                                @item.EventDate.ToString("dd.MM.yyyy HH:mm")
-                            </td>
+                            <td class="px-lg py-4">@item.EventDate.ToString("dd.MM.yyyy HH:mm")</td>
 
                             <!-- Konum -->
-                            <td class="px-lg py-4">
-                                @item.Location
-                            </td>
+                            <td class="px-lg py-4">@item.Location</td>
 
                             <!-- Kapasite -->
-                            <td class="px-lg py-4 text-center">
-                                @item.Capacity
-                            </td>
+                            <td class="px-lg py-4 text-center">@item.Capacity</td>
 
-                            <!-- Satılan Bilet -->
-                            <td class="px-lg py-4 text-center">
-                                @item.TicketCount
+                            <!-- Bilet (Progress Bar) -->
+                            <td class="px-lg py-4">
+                                <div class="w-32">
+                                    <div class="text-xs text-on-surface-variant mb-1">@item.TicketCount / @item.Capacity</div>
+                                    <div class="w-full bg-surface-variant rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full" style="width: @occupancyRate.ToString("F0")%"></div>
+                                    </div>
+                                </div>
                             </td>
 
                             <!-- Fiyat -->
                             <td class="px-lg py-4">
-                                <span class="font-semibold text-primary">
-                                    @item.Price ₺
-                                </span>
+                                <span class="font-semibold text-primary">@item.Price ₺</span>
                             </td>
 
                             <!-- Durum -->
                             <td class="px-lg py-4">
                                 @if (item.IsActive)
                                 {
-                                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm">
-                                        Aktif
-                                    </span>
+                                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm">Aktif</span>
                                 }
                                 else
                                 {
-                                    <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">
-                                        Pasif
-                                    </span>
+                                    <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">Pasif</span>
                                 }
                             </td>
 
                             <!-- İşlemler -->
                             <td class="px-lg py-4">
                                 <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition">
-
-                                    <button type="button"
-                                            onclick="openModal(true,@item.EventId)"
-                                            class="w-9 h-9 rounded-lg border border-outline-variant hover:text-primary flex items-center justify-center">
+                                    <button type="button" onclick="openModal(true,@item.EventId)" class="w-9 h-9 rounded-lg border border-outline-variant hover:text-primary flex items-center justify-center">
                                         <span class="material-symbols-outlined">edit</span>
                                     </button>
-
-                                    <form asp-area="Admin"
-                                          asp-controller="Events"
-                                          asp-action="Remove"
-                                          asp-route-id="@item.EventId"
-                                          method="post"
-                                          onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
-
+                                    <form asp-area="Admin" asp-controller="Events" asp-action="Remove" asp-route-id="@item.EventId" method="post" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
                                         @Html.AntiForgeryToken()
-
                                         <button class="w-9 h-9 rounded-lg border border-outline-variant hover:text-error flex items-center justify-center">
                                             <span class="material-symbols-outlined">delete</span>
                                         </button>
-
                                     </form>
-
                                 </div>
                             </td>
-
                         </tr>
                     }
                 </tbody>

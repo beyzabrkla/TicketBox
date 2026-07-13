@@ -23,7 +23,6 @@ namespace TicketBox.Application.Features.Events.Handlers
 
         public async Task<PaginatedEventResult> Handle(FilterEventsQuery request, CancellationToken cancellationToken)
         {
-            // Eğer request.CategoryId null değilse listeye al, null ise boş liste gönder
             var categoryList = request.CategoryId.HasValue
                                                         ? new List<int> { request.CategoryId.Value }
                                                         : new List<int>();
@@ -37,24 +36,48 @@ namespace TicketBox.Application.Features.Events.Handlers
                     request.SearchTerm);
 
             var query = _context.Events.AsQueryable();
-
-            // Specification üzerinden sorguyu filtrele
             var filteredQuery = SpecificationEvaluator<Event>.GetQuery(query, spec);
 
-            //Toplam sayıyı al (Sayfalama öncesi)
+            //Toplam sayıyı al
             var totalCount = await filteredQuery.CountAsync(cancellationToken);
+
+            //Filtrelenmiş etkinliklerin ID listesini alıp toplam satışı hesaplıyoruz
+            var eventIds = await filteredQuery.Select(e => e.EventId).ToListAsync(cancellationToken);
+
+            var totalSalesForTheseEvents = await _context.Bookings
+                .Where(b => eventIds.Contains(b.EventId))
+                .SumAsync(b => b.TotalAmount - b.ServiceFee, cancellationToken);
 
             //Sayfalama
             var values = await filteredQuery
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToListAsync(cancellationToken);
+                    .Skip((request.PageNumber - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .Include(e => e.Tickets) 
+                    .Include(e => e.Category)
+                    .Select(e => new GetEventQueryResult
+                    {
+                        EventId = e.EventId,
+                        Title = e.Title,
+                        Description = e.Description,
+                        ImageUrl = e.ImageUrl,
+                        Location = e.Location,
+                        IsActive = e.IsActive,
+                        Price = e.Price ?? 0,
+                        EventDate = e.EventDate ?? DateTime.UtcNow,
+                        CategoryName = e.Category.CategoryName,
+                        CategoryId = e.CategoryId,
+                        Capacity = e.Capacity ?? 0,
+                        TicketCount = e.Tickets.Count(t => t.IsActive)
+                    })
+                    .ToListAsync(cancellationToken);
 
-            //Sonucu eşleyip PaginatedEventResult dön
             return new PaginatedEventResult
             {
-                Items = _mapper.Map<List<GetEventQueryResult>>(values),
-                TotalCount = totalCount
+                Items = values, // Artık mapper'a gerek kalmadan doğrudan atayabilirsin
+                TotalCount = totalCount,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TotalSalesAmount = totalSalesForTheseEvents
             };
         }
     }

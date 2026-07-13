@@ -44,7 +44,13 @@ namespace TicketBox.Application.Features.Events.Handlers
 
             var result = _mapper.Map<GetByIdEventQueryResult>(value);
             result.ServiceFee = 150;
-            result.SoldTicketCount = value.Tickets?.Count ?? 0;
+
+            // aktif biletleri sayıyoruz
+            var activeSoldCount = value.Tickets?.Count(t => t.IsActive) ?? 0;
+            result.SoldTicketCount = activeSoldCount;
+
+            //Kalan koltuk
+            result.SoldTicketCount = value.Tickets?.Count(t => t.IsActive) ?? 0;
 
             //Veritabanından gelen sonucu Cache'e kaydet
             _cache.Set(cacheKey, result, TimeSpan.FromHours(1));

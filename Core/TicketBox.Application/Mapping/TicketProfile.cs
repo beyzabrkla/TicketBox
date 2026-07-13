@@ -5,19 +5,17 @@ using TicketBox.Domain.Entities;
 
 namespace TicketBox.Application.Mapping
 {
-    // Mapping/TicketProfile.cs
     public class TicketProfile : Profile
     {
         public TicketProfile()
         {
             CreateMap<Ticket, GetByIdTicketQueryResult>();
             CreateMap<Ticket, GetTicketQueryResult>();
-
-            CreateMap<CreateTicketCommand, Ticket>();
-
-            CreateMap<UpdateTicketCommand, Ticket>()
-                .ForMember(dest => dest.TicketId, opt => opt.Ignore())
-                .ForMember(dest => dest.PNR, opt => opt.Ignore());
+           
+            CreateMap<Ticket, GetTicketQueryResult>()
+                        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.AppUser.Name + " " + src.AppUser.Surname))
+                        .ForMember(dest => dest.Booking, opt => opt.MapFrom(src => src.Booking))
+                        .ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.Event));
         }
     }
 }

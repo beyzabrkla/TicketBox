@@ -1,0 +1,50 @@
+﻿@model List<TicketBox.Application.Features.Events.Results.GetEventQueryResult>
+
+<div class="container mx-auto py-20 px-6">
+    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-lg border border-slate-100">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">AI Asistanın Cevapladı</h2>
+        <p class="text-lg text-slate-600 italic">" @ViewBag.UserMood "</p>
+        <hr class="my-6">
+        <div class="text-slate-800 leading-relaxed mb-8">
+            @ViewBag.AiResponse
+        </div>
+
+        @if (ViewBag.MatchedCategory != null)
+        {
+            <h3 class="text-xl font-bold text-slate-800 mb-4">
+                @ViewBag.MatchedCategory kategorisinde senin için seçtiklerimiz
+            </h3>
+        }
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach (var ev in Model)
+                {
+                    <a asp-controller="Event" asp-action="EventDetail" asp-route-id="@ev.EventId"
+                       class="flex gap-4 p-4 rounded-2xl border border-slate-100 hover:shadow-md transition-all">
+                        @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                        {
+                            <img src="@ev.ImageUrl" alt="@ev.Title" class="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
+                        }
+                        <div>
+                            <h4 class="font-bold text-slate-800">@ev.Title</h4>
+                            <p class="text-sm text-slate-500">@ev.Location — @ev.EventDate.ToString("dd MMM yyyy")</p>
+                            <p class="text-indigo-600 font-semibold mt-1">@ev.Price ₺</p>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-slate-500">Bu kategoride şu an uygun etkinlik bulunamadı.</p>
+        }
+
+        <div class="mt-8">
+            <a asp-controller="Home" asp-action="Index" class="text-indigo-600 font-semibold hover:underline">
+                ← Ana sayfaya dön
+            </a>
+        </div>
+    </div>
+</div>
