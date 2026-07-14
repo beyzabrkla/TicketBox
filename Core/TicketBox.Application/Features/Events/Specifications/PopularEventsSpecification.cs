@@ -1,4 +1,4 @@
-﻿using TicketBox.Domain.Entities;
+using TicketBox.Domain.Entities;
 using TicketBox.Domain.Specifications;
 
 namespace TicketBox.Application.Features.Events.Specifications
@@ -9,7 +9,7 @@ namespace TicketBox.Application.Features.Events.Specifications
         {
             ApplyOrderByDescending(x => x.Tickets.Count(t => t.IsActive));
 
-            ApplyPaging(0, count); // Burada Take mantığını kur
+            ApplyPaging(0, count); 
         }
     }
 }
