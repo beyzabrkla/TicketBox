@@ -51,8 +51,6 @@ Sistem, kullanıcının o anki ruh halini (mood) analiz ederek, etkinlik veritab
     *   **Geçmiş & İade Süreçleri:** İptal edilen biletlerin "Geçmiş & İptal Edilenler" sekmesinde şeffaf arşivlenmesi.
 *   **Dijital Biletleme:** PNR kodlu ve QR destekli biletlerin anında görüntülenmesi ve otomatik e-posta bildirimi.
 
-### 🧠 Gemini AI ile Akıllı Etkinlik Asistanı
-*   **Ruh Hali Odaklı Öneriler:** Kullanıcının o anki duygusal durumunu (örn: "enerjik") analiz eder ve en uygun kategoriyi önerir.
 
 ### 📊 Yönetici Paneli ve İleri Seviye Analitik
 *   **KPI Paneli:** "Toplam Brüt Satış", "Aktif Etkinlikler" ve "Yeni Kullanıcılar" gibi temel performans göstergeleri.
