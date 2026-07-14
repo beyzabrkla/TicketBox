@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TicketBox.Application.Features.Common.Specifications;
@@ -73,7 +73,7 @@ namespace TicketBox.Application.Features.Events.Handlers
 
             return new PaginatedEventResult
             {
-                Items = values, // Artık mapper'a gerek kalmadan doğrudan atayabilirsin
+                Items = values, 
                 TotalCount = totalCount,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
