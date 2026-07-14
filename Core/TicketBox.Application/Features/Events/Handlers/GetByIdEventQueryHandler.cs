@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory; // 1. Namespace'i ekle
+using Microsoft.Extensions.Caching.Memory;
 using TicketBox.Application.Features.Events.Queries;
 using TicketBox.Application.Features.Events.Results;
 using TicketBox.Application.Interfaces;
