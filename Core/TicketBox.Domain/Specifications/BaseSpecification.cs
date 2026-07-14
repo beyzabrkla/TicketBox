@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace TicketBox.Domain.Specifications
     {
@@ -21,7 +21,6 @@ namespace TicketBox.Domain.Specifications
         protected void AddCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
         protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes.Add(includeExpression);
 
-        // SAYFALAMA METODU BURAYA EKLENECEK
         protected void ApplyPaging(int skip, int take)
         {
             Skip = skip;
